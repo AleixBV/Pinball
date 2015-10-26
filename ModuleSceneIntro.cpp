@@ -26,6 +26,7 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	//--------------------------------
 	int pinball_1[52] = {
 		675, 692,
 		601, 152,
@@ -193,6 +194,38 @@ bool ModuleSceneIntro::Start()
 		431, 214,
 		417, 226
 	};
+	//--------------------------------
+
+	int flipper_l[24] = {
+		363, 633,
+		360, 640,
+		361, 646,
+		365, 651,
+		371, 652,
+		380, 648,
+		425, 611,
+		428, 606,
+		427, 601,
+		422, 598,
+		415, 599,
+		407, 605
+	};
+
+	int flipper_r[24] = {
+		491, 602,
+		483, 598,
+		478, 600,
+		477, 606,
+		480, 611,
+		528, 650,
+		535, 652,
+		541, 652,
+		545, 647,
+		545, 641,
+		543, 634,
+		534, 628
+	};
+	//-------------------------------
 
 	int radius = 15;
 
@@ -210,10 +243,19 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody);
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody);
 
+	PhysBody* f_r = App->physics->CreateChain(0, 0, flipper_r, 24, b2_dynamicBody);
+	PhysBody* f_l = App->physics->CreateChain(0, 0, flipper_l, 24, b2_dynamicBody);
+
 	App->physics->CreateCircle(331, 97, radius, b2_staticBody);
 	App->physics->CreateCircle(421, 173, radius, b2_staticBody);
 	App->physics->CreateCircle(453, 216, radius, b2_staticBody);
 	App->physics->CreateCircle(486, 161, radius, b2_staticBody);
+
+	PhysBody* a_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
+	PhysBody* b_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
+
+	b2RevoluteJointDef joint_fL;
+	joint_fL.Initialize(a_l->body, f_l->body, a_l->body->GetWorldCenter());
 
 	background = App->textures->Load("pinball/pinball.png");
 
