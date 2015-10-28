@@ -13,6 +13,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ray_on = false;
 	sensed = false;
 	show_back = false;
+	flip_l = flip_r = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -23,6 +24,7 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+	background = App->textures->Load("pinball/pinball.png");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -196,34 +198,22 @@ bool ModuleSceneIntro::Start()
 	};
 	//--------------------------------
 
-	int flipper_l[24] = {
-		363, 633,
-		360, 640,
-		361, 646,
-		365, 651,
-		371, 652,
-		380, 648,
-		425, 611,
-		428, 606,
-		427, 601,
-		422, 598,
-		415, 599,
-		407, 605
+	int flipper_l[12] = {
+		427, 607,
+		426, 601,
+		418, 600,
+		362, 636,
+		361, 648,
+		372, 653
 	};
 
-	int flipper_r[24] = {
-		491, 602,
-		483, 598,
-		478, 600,
-		477, 606,
-		480, 611,
-		528, 650,
-		535, 652,
-		541, 652,
-		545, 647,
-		545, 641,
-		543, 634,
-		534, 628
+	int flipper_r[12] = {
+		534, 651,
+		543, 648,
+		543, 638,
+		488, 602,
+		481, 602,
+		482, 609
 	};
 	//-------------------------------
 
@@ -243,21 +233,44 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody);
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody);
 
-	PhysBody* f_r = App->physics->CreateChain(0, 0, flipper_r, 24, b2_dynamicBody);
-	PhysBody* f_l = App->physics->CreateChain(0, 0, flipper_l, 24, b2_dynamicBody);
+	PhysBody* f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody);
+	PhysBody* f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody);
 
 	App->physics->CreateCircle(331, 97, radius, b2_staticBody);
 	App->physics->CreateCircle(421, 173, radius, b2_staticBody);
 	App->physics->CreateCircle(453, 216, radius, b2_staticBody);
 	App->physics->CreateCircle(486, 161, radius, b2_staticBody);
 
-	PhysBody* a_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
-	PhysBody* b_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
+	PhysBody* c_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
+	PhysBody* c_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
+
+	b2Vec2 fl_pivot(PIXEL_TO_METERS(371), PIXEL_TO_METERS(639));
+	b2Vec2 fr_pivot(PIXEL_TO_METERS(533), PIXEL_TO_METERS(640));
 
 	b2RevoluteJointDef joint_fL;
-	joint_fL.Initialize(a_l->body, f_l->body, a_l->body->GetWorldCenter());
+	joint_fL.bodyA = c_l->body;
+	joint_fL.bodyB = f_l->body;
+	joint_fL.localAnchorA = c_l->body->GetLocalCenter();
+	joint_fL.localAnchorB = fl_pivot;
+	joint_fL.enableLimit = true;
+	joint_fL.lowerAngle = 0;
+	joint_fL.upperAngle = 70 * DEGTORAD;
+	joint_fL.motorSpeed = -100;
+	joint_fL.maxMotorTorque = 100;
 
-	background = App->textures->Load("pinball/pinball.png");
+	b2RevoluteJointDef joint_fR;
+	joint_fR.bodyA = c_r->body;
+	joint_fR.bodyB = f_r->body;
+	joint_fR.localAnchorA = c_r->body->GetLocalCenter();
+	joint_fR.localAnchorB = fr_pivot;
+	joint_fR.enableLimit = true;
+	joint_fR.lowerAngle = -70 * DEGTORAD;
+	joint_fR.upperAngle = 0;
+	joint_fR.motorSpeed = 100;
+	joint_fR.maxMotorTorque = 100;
+
+	flip_l = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fL);
+	flip_r = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fR);
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
@@ -328,6 +341,18 @@ update_status ModuleSceneIntro::Update()
 		if(normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+		flip_l->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
+		flip_l->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+		flip_r->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
+		flip_r->EnableMotor(false);
 
 	return UPDATE_CONTINUE;
 }

@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 class PhysBody;
+class b2RevoluteJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -30,7 +31,10 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
+	b2RevoluteJoint* flip_l;
+	b2RevoluteJoint* flip_r;
 
 private:
 	bool show_back;
+	
 };
