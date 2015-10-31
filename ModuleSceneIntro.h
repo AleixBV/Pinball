@@ -30,14 +30,6 @@ public:
 	p2Point<int> ray;
 	bool ray_on;
 
-	SDL_Texture* flipL_tex;
-	SDL_Texture* flipR_tex;
-	SDL_Texture* ball_tex;
-
-	PhysBody* f_l;
-	PhysBody* f_r;
-	PhysBody* ball;
-
 private:
 	bool show_back;
 	b2RevoluteJoint* flip_l;

@@ -9,11 +9,10 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = background = NULL;
+	background = NULL;
 	ray_on = false;
 	sensed = false;
 	show_back = false;
-	flip_l = flip_r = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -25,9 +24,6 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	background = App->textures->Load("pinball/windows_pinball.png");
-	flipL_tex = App->textures->Load("pinball/flip_es.png");
-	flipR_tex = App->textures->Load("pinball/flip_dr.png");
-	ball_tex = App->textures->Load("pinball/ball.png");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -199,26 +195,8 @@ bool ModuleSceneIntro::Start()
 		431, 214,
 		417, 226
 	};
+	
 	//--------------------------------
-
-	int flipper_l[12] = {
-		427, 607,
-		426, 601,
-		418, 600,
-		362, 636,
-		361, 648,
-		372, 653
-	};
-
-	int flipper_r[12] = {
-		534, 651,
-		543, 648,
-		543, 638,
-		488, 602,
-		481, 602,
-		482, 609
-	};
-	//-------------------------------
 
 	int radius = 15;
 
@@ -258,35 +236,6 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 0.8f);
 	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
 
-	//Flippers
-	f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.0f);
-	f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.0f);
-
-	PhysBody* c_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
-	PhysBody* c_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
-
-	b2Vec2 fl_pivot(PIXEL_TO_METERS(371), PIXEL_TO_METERS(639));
-	b2Vec2 fr_pivot(PIXEL_TO_METERS(533), PIXEL_TO_METERS(640));
-
-	flip_l = App->physics->CreateRevoluteJoint(c_l, f_l, c_l->body->GetLocalCenter(), fl_pivot, true, 0, 70, -200, 100);
-	flip_r = App->physics->CreateRevoluteJoint(c_r, f_r, c_r->body->GetLocalCenter(), fr_pivot, true, -70, 0, 200, 100);
-
-	//Quicker
-	int quicker_b[8] = {
-		676, 638,
-		697, 635,
-		703, 681,
-		683, 684
-	};
-
-	PhysBody* quicker_box = App->physics->CreatePolygon(0, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
-	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, true);
-
-	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);
-	
-	//Ball
-	ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
-
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 
 	return ret;
@@ -318,15 +267,6 @@ update_status ModuleSceneIntro::Update()
 
 	if (show_back==true)
 		App->renderer->Blit(background, 0, 0);
-
-	//Render flippers
-	App->renderer->Blit(flipL_tex, 360, 600, NULL, 1.0f, f_l->GetRotation(), 12, 39);
-	App->renderer->Blit(flipR_tex, 475, 600, NULL, 1.0f, f_r->GetRotation(), 56, 41);
-
-	//Render the ball
-	int ball_x, ball_y;
-	ball->GetPosition(ball_x, ball_y);
-	App->renderer->Blit(ball_tex, ball_x, ball_y, NULL, 1.0f, ball->GetRotation());
 
 	// Prepare for raycast ------------------------------------------------------
 	
