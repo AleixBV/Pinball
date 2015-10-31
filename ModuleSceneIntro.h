@@ -20,9 +20,6 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 public:
-	p2List<PhysBody*> circles;
-	p2List<PhysBody*> boxes;
-	p2List<PhysBody*> ricks;
 
 	PhysBody* sensor;
 	bool sensed;
@@ -32,6 +29,14 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
+
+	SDL_Texture* flipL_tex;
+	SDL_Texture* flipR_tex;
+	SDL_Texture* ball_tex;
+
+	PhysBody* f_l;
+	PhysBody* f_r;
+	PhysBody* ball;
 
 private:
 	bool show_back;
