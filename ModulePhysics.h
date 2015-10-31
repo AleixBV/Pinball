@@ -46,6 +46,8 @@ public:
 	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType type = b2_staticBody, float restitution = 0.0f, bool sensor = false);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType bodyType, float density = 1.0f, float restitution = 0.0f, bool sensor = false);
 	PhysBody* CreatePolygon(int x, int y, int* points, int size, b2BodyType bodyType, float density = 1.0f);
+	b2RevoluteJoint* CreateRevoluteJoint(const PhysBody* a, const PhysBody* b, const b2Vec2& Center_a, const b2Vec2 Center_b, const bool limit, const int lowAngle, const int upAngle, const int motorSpeed, const int maxTorque);
+	b2PrismaticJoint* CreatePrismaticJoint(const PhysBody* a, const PhysBody* b);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

@@ -6,6 +6,7 @@
 
 class PhysBody;
 class b2RevoluteJoint;
+class b2PrismaticJoint;
 
 class ModuleSceneIntro : public Module
 {
@@ -31,10 +32,10 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
-	b2RevoluteJoint* flip_l;
-	b2RevoluteJoint* flip_r;
 
 private:
 	bool show_back;
-	
+	b2RevoluteJoint* flip_l;
+	b2RevoluteJoint* flip_r;
+	b2PrismaticJoint* quicker;
 };

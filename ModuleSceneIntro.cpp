@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
-	background = App->textures->Load("pinball/pinball.png");
+	background = App->textures->Load("pinball/windows_pinball.png");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -233,13 +233,10 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody);
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody);
 
-	PhysBody* f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.0f);
-	PhysBody* f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.0f);
-
 	App->physics->CreateCircle(331, 97, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(421, 173, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(453, 216, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(486, 161, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(421, 180, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(453, 225, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(486, 170, radius, b2_staticBody, 1.5f);
 
 	int bound_1[8] = {
 		325, 475,
@@ -258,6 +255,9 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 0.8f);
 	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
 
+	//Flippers
+	PhysBody* f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.0f);
+	PhysBody* f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.0f);
 
 	PhysBody* c_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
 	PhysBody* c_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
@@ -265,32 +265,27 @@ bool ModuleSceneIntro::Start()
 	b2Vec2 fl_pivot(PIXEL_TO_METERS(371), PIXEL_TO_METERS(639));
 	b2Vec2 fr_pivot(PIXEL_TO_METERS(533), PIXEL_TO_METERS(640));
 
-	b2RevoluteJointDef joint_fL;
-	joint_fL.bodyA = c_l->body;
-	joint_fL.bodyB = f_l->body;
-	joint_fL.localAnchorA = c_l->body->GetLocalCenter();
-	joint_fL.localAnchorB = fl_pivot;
-	joint_fL.enableLimit = true;
-	joint_fL.lowerAngle = 0 * DEGTORAD;
-	joint_fL.upperAngle = 70 * DEGTORAD;
-	joint_fL.motorSpeed = -200;
-	joint_fL.maxMotorTorque = 100;
+	flip_l = App->physics->CreateRevoluteJoint(c_l, f_l, c_l->body->GetLocalCenter(), fl_pivot, true, 0, 70, -200, 100);
+	flip_r = App->physics->CreateRevoluteJoint(c_r, f_r, c_r->body->GetLocalCenter(), fr_pivot, true, -70, 0, 200, 100);
 
-	b2RevoluteJointDef joint_fR;
-	joint_fR.bodyA = c_r->body;
-	joint_fR.bodyB = f_r->body;
-	joint_fR.localAnchorA = c_r->body->GetLocalCenter();
-	joint_fR.localAnchorB = fr_pivot;
-	joint_fR.enableLimit = true;
-	joint_fR.lowerAngle = -70 * DEGTORAD;
-	joint_fR.upperAngle = 0 * DEGTORAD;
-	joint_fR.motorSpeed = 200;
-	joint_fR.maxMotorTorque = 100;
+	//Quicker
+	int quicker_b[8] = {
+		676, 638,
+		697, 635,
+		703, 681,
+		683, 684
+	};
 
-	flip_l = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fL);
-	flip_r = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fR);
+	PhysBody* quicker_box = App->physics->CreatePolygon(0, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
+	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, true);
 
-	App->physics->CreateRectangle(677, 675, 30, 100, b2_dynamicBody);
+	//PhysBody* quicker_box = App->physics->CreatePolygon(0, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
+	//PhysBody* quick_point = App->physics->CreateCircle(850, 550, 10, b2_staticBody, 0, true);
+
+	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);
+	
+	//Ball
+	App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
 
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 
@@ -373,6 +368,12 @@ update_status ModuleSceneIntro::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
 		flip_r->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		quicker->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
+		quicker->EnableMotor(false);
 
 	return UPDATE_CONTINUE;
 }

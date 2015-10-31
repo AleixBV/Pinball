@@ -389,3 +389,35 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	if(physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
 }
+
+//This method is especific to do flippers
+b2RevoluteJoint* ModulePhysics::CreateRevoluteJoint(const PhysBody* a, const PhysBody* b, const b2Vec2& Center_a, const b2Vec2 Center_b, const bool limit, const int lowAngle, const int upAngle, const int motorSpeed, const int maxTorque)
+{
+	b2RevoluteJointDef joint;
+	joint.bodyA = a->body;
+	joint.bodyB = b->body;
+	joint.localAnchorA = Center_a;
+	joint.localAnchorB = Center_b;
+	joint.enableLimit = limit;
+	joint.lowerAngle = lowAngle * DEGTORAD;
+	joint.upperAngle = upAngle * DEGTORAD;
+	joint.motorSpeed = motorSpeed;
+	joint.maxMotorTorque = maxTorque;
+
+	return ((b2RevoluteJoint*)world->CreateJoint(&joint));
+}
+
+b2PrismaticJoint* ModulePhysics::CreatePrismaticJoint(const PhysBody* a, const PhysBody* b)
+{
+	b2PrismaticJointDef jointDef;
+	b2Vec2 worldAxis(-0.15, -0.85f);
+	jointDef.Initialize(a->body, b->body, a->body->GetWorldCenter(), worldAxis);
+	jointDef.lowerTranslation = 0.0f;
+	jointDef.upperTranslation = 2.5f;
+	jointDef.enableLimit = true;
+	jointDef.maxMotorForce = -20.0f;
+	jointDef.motorSpeed = -100.0f;
+	jointDef.enableMotor = false;
+
+	return ((b2PrismaticJoint*)world->CreateJoint(&jointDef));
+}
