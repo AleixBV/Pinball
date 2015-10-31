@@ -233,13 +233,31 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody);
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody);
 
-	PhysBody* f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody);
-	PhysBody* f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody);
+	PhysBody* f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.0f);
+	PhysBody* f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.0f);
 
-	App->physics->CreateCircle(331, 97, radius, b2_staticBody);
-	App->physics->CreateCircle(421, 173, radius, b2_staticBody);
-	App->physics->CreateCircle(453, 216, radius, b2_staticBody);
-	App->physics->CreateCircle(486, 161, radius, b2_staticBody);
+	App->physics->CreateCircle(331, 97, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(421, 173, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(453, 216, radius, b2_staticBody, 1.5f);
+	App->physics->CreateCircle(486, 161, radius, b2_staticBody, 1.5f);
+
+	int bound_1[8] = {
+		325, 475,
+		340, 483,
+		370, 560,
+		365, 578
+	}; 
+
+	int bound_2[8] = {
+		578, 474,
+		563, 483,
+		538, 563,
+		543, 581
+	};
+
+	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 0.8f);
+	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
+
 
 	PhysBody* c_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
 	PhysBody* c_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
@@ -253,9 +271,9 @@ bool ModuleSceneIntro::Start()
 	joint_fL.localAnchorA = c_l->body->GetLocalCenter();
 	joint_fL.localAnchorB = fl_pivot;
 	joint_fL.enableLimit = true;
-	joint_fL.lowerAngle = 0;
+	joint_fL.lowerAngle = 0 * DEGTORAD;
 	joint_fL.upperAngle = 70 * DEGTORAD;
-	joint_fL.motorSpeed = -100;
+	joint_fL.motorSpeed = -200;
 	joint_fL.maxMotorTorque = 100;
 
 	b2RevoluteJointDef joint_fR;
@@ -265,14 +283,14 @@ bool ModuleSceneIntro::Start()
 	joint_fR.localAnchorB = fr_pivot;
 	joint_fR.enableLimit = true;
 	joint_fR.lowerAngle = -70 * DEGTORAD;
-	joint_fR.upperAngle = 0;
-	joint_fR.motorSpeed = 100;
+	joint_fR.upperAngle = 0 * DEGTORAD;
+	joint_fR.motorSpeed = 200;
 	joint_fR.maxMotorTorque = 100;
 
 	flip_l = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fL);
 	flip_r = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fR);
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 
 	return ret;
 }
@@ -296,7 +314,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody);
+		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody, false, 0);
 
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 		show_back= !show_back;
