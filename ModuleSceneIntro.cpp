@@ -290,6 +290,8 @@ bool ModuleSceneIntro::Start()
 	flip_l = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fL);
 	flip_r = (b2RevoluteJoint*)App->physics->GetWorld()->CreateJoint(&joint_fR);
 
+	App->physics->CreateRectangle(677, 675, 30, 100, b2_dynamicBody);
+
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 
 	return ret;
