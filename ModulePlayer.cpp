@@ -72,7 +72,7 @@ bool ModulePlayer::Start()
 		683, 684
 	};
 
-	PhysBody* quicker_box = App->physics->CreatePolygon(0, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
+	PhysBody* quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
 	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, true);
 
 	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);
