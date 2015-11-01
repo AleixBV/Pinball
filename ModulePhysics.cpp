@@ -337,9 +337,9 @@ void PhysBody::GetPosition(int& x, int &y) const
 	y = METERS_TO_PIXELS(pos.y) - (height);
 }
 
-void PhysBody::SetPosition(int x, int y)
+void PhysBody::SetPosition(int x, int y, float angle)
 {
-	body->SetTransform(b2Vec2(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y)), 0.0f);
+	body->SetTransform(b2Vec2(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y)), DEGTORAD * angle);
 }
 
 float PhysBody::GetRotation() const
@@ -431,12 +431,12 @@ b2PrismaticJoint* ModulePhysics::CreatePrismaticJoint(const PhysBody* a, const P
 	b2PrismaticJointDef jointDef;
 	b2Vec2 worldAxis(-0.15, -0.85f);
 	jointDef.Initialize(a->body, b->body, a->body->GetWorldCenter(), worldAxis);
-	jointDef.lowerTranslation = 0.0f;
-	jointDef.upperTranslation = 2.5f;
+	jointDef.lowerTranslation = -0.7f;
+	jointDef.upperTranslation = 0.0f;
 	jointDef.enableLimit = true;
-	jointDef.maxMotorForce = -20.0f;
-	jointDef.motorSpeed = -100.0f;
-	jointDef.enableMotor = false;
+	jointDef.maxMotorForce = -90.0f;
+	jointDef.motorSpeed = -80.0f;
+	jointDef.enableMotor = true;
 
 	return ((b2PrismaticJoint*)world->CreateJoint(&jointDef));
 }

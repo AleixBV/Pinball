@@ -66,14 +66,16 @@ bool ModulePlayer::Start()
 	flip_r = App->physics->CreateRevoluteJoint(c_r, f_r, c_r->body->GetLocalCenter(), fr_pivot, true, -70, 0, 150, 100);
 
 	//Quicker
-	int quicker_b[8] = {
-		676, 638,
-		697, 635,
-		703, 681,
-		683, 684
+	int quicker_b[12] = {
+		696, 680,
+		692, 646,
+		681, 647,
+		680, 638,
+		675, 638,
+		678, 678
 	};
 
-	quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
+	quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 12, b2_dynamicBody, 1.0f);
 	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, false, true);
 
 	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);

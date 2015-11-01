@@ -20,7 +20,7 @@ public:
 	{}
 
 	void GetPosition(int& x, int &y) const;
-	void SetPosition(int x, int y);
+	void SetPosition(int x, int y, float angle = 0.0f);
 	float GetRotation() const;
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
@@ -48,7 +48,7 @@ public:
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType bodyType, float density = 1.0f, float restitution = 0.0f, bool sensor = false);
 	PhysBody* CreatePolygon(int x, int y, int* points, int size, b2BodyType bodyType, float density = 1.0f);
 	b2RevoluteJoint* CreateRevoluteJoint(const PhysBody* a, const PhysBody* b, const b2Vec2& Center_a, const b2Vec2 Center_b, const bool limit, const int lowAngle, const int upAngle, const int motorSpeed, const int maxTorque);
-	b2PrismaticJoint* CreatePrismaticJoint(const PhysBody* a, const PhysBody* b);
+	b2PrismaticJoint* CreatePrismaticJoint(const PhysBody* a, const PhysBody* b);//Very specifick for our quicker
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

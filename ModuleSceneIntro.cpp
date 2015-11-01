@@ -111,10 +111,10 @@ bool ModuleSceneIntro::Start()
 		505, 111,
 		492, 116,
 		500, 121,
-		500, 134,
+		501, 129,
 		505, 121,
 		517, 129,
-		514, 146,
+		517, 140,
 		522, 136,
 		546, 157,
 		552, 191,
@@ -251,6 +251,10 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 0.8f);
 	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
 
+	//Create a box so the ball at the begining doesn't fall
+	PhysBody* box = App->physics->CreateRectangle(695, 637, 17, 1, b2_staticBody);
+	box->SetPosition(695, 637, -5.0f);
+
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 	sensor->listener = this;
 
@@ -352,10 +356,10 @@ update_status ModuleSceneIntro::Update()
 		App->player->flip_r->EnableMotor(false);
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->player->quicker->EnableMotor(true);
+		App->player->quicker->EnableMotor(false);
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
-		App->player->quicker->EnableMotor(false);
+		App->player->quicker->EnableMotor(true);
 
 	return UPDATE_CONTINUE;
 }
