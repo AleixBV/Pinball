@@ -7,7 +7,7 @@
 class PhysBody;
 class b2RevoluteJoint;
 class b2PrismaticJoint;
-class SDL_Texture;
+struct SDL_Texture;
 
 class ModulePlayer : public Module
 {
@@ -18,8 +18,6 @@ public:
 	bool Start();
 	update_status Update();
 	bool CleanUp();
-
-	void dead(PhysBody* ball_dead);
 
 public:
 	SDL_Texture* flipL_tex;

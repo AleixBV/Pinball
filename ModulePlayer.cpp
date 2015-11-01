@@ -79,6 +79,7 @@ bool ModulePlayer::Start()
 
 	//Ball
 	ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
+	ball->listener = this;
 
 	return true;
 }
@@ -117,24 +118,4 @@ update_status ModulePlayer::Update()
 	App->renderer->Blit(ball_tex, ball_x, ball_y, NULL, 1.0f, ball->GetRotation());
 
 	return UPDATE_CONTINUE;
-}
-
-void ModulePlayer::dead(PhysBody* ball_dead)
-{
-	if (life > 0)
-	{
-		//Need to delete the ball and create a new one
-		life -= 1;
-		if (ball_dead == ball)
-		{
-			ball->SetPosition(677, 600);
-		}
-	}
-	/*if (life == 0)
-	{
-		last_score = score;
-		score = 0;
-		life = 3;
-		ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
-	}*/
 }

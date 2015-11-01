@@ -368,6 +368,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (sensor->body == bodyA->body && check != true)
 	{
 		check = true;
-		App->player->dead(bodyB);
+		App->player->life--;
+
+		if (bodyB == App->player->ball)
+		{
+			b2Vec2 speed(0, 0);
+			App->player->ball->body->SetLinearVelocity(speed);
+			App->player->ball->body->SetAngularVelocity(0.0f);
+			App->player->ball->SetPosition(677, 600);
+		}
 	}
 }
