@@ -14,6 +14,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ray_on = false;
 	sensed = false;
 	show_back = false;
+	check = false;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -238,6 +239,7 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
 
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
+	sensor->listener = this;
 
 	return ret;
 }
@@ -346,4 +348,11 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
+	
+
+	if (sensor->body == bodyA->body && check != true)
+	{
+		check = true;
+		App->player->dead();
+	}
 }

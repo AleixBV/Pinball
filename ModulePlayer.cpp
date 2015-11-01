@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModulePlayer.h"
+#include "ModuleWindow.h"
 #include "ModuleTextures.h"
 #include "ModulePhysics.h"
 
@@ -20,6 +21,8 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
+	life = 3;
+	score = last_score = 0;
 	flipL_tex = App->textures->Load("pinball/flip_es.png");
 	flipR_tex = App->textures->Load("pinball/flip_dr.png");
 	ball_tex = App->textures->Load("pinball/ball.png");
@@ -85,6 +88,8 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
+	title.create("Lifes: %i. Score:%i. Last score:%i.", life, score, last_score);
+	App->window->SetTitle(title.GetString());
 	//Render flippers
 	App->renderer->Blit(flipL_tex, 360, 600, NULL, 1.0f, f_l->GetRotation(), 12, 39);
 	App->renderer->Blit(flipR_tex, 475, 600, NULL, 1.0f, f_r->GetRotation(), 56, 41);
@@ -97,5 +102,19 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
-
-
+void ModulePlayer::dead()
+{
+	if (life > 0)
+	{
+		//Need to delete the ball and create a new one
+		life -= 1;
+		//ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
+	}
+	/*if (life == 0)
+	{
+		last_score = score;
+		score = 0;
+		life = 3;
+		ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
+	}*/
+}

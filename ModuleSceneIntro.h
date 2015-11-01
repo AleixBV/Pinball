@@ -30,6 +30,8 @@ public:
 	p2Point<int> ray;
 	bool ray_on;
 
+	bool check;
+
 private:
 	bool show_back;
 	b2RevoluteJoint* flip_l;

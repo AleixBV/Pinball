@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "p2SString.h"
 
 class PhysBody;
 class b2RevoluteJoint;
@@ -18,6 +19,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void dead();
+
 public:
 	SDL_Texture* flipL_tex;
 	SDL_Texture* flipR_tex;
@@ -30,4 +33,9 @@ public:
 	b2RevoluteJoint* flip_l;
 	b2RevoluteJoint* flip_r;
 	b2PrismaticJoint* quicker;
+
+	int life;
+	int score;
+	int last_score;
+	p2SString title;
 };
