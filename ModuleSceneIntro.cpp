@@ -29,6 +29,9 @@ bool ModuleSceneIntro::Start()
 	frontground = App->textures->Load("pinball/frontground.png");
 	background = App->textures->Load("pinball/windows_pinball.png");
 
+	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
+	App->audio->PlayFx(start_game_sound);
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	//--------------------------------
