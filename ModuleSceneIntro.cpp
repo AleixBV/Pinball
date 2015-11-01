@@ -287,7 +287,7 @@ bool ModuleSceneIntro::Start()
 	texture_circle_bouncer_sensor = App->textures->Load("");
 	sound_circle_bouncer_sensor = App->audio->LoadFx("pinball/SOUND12.wav");
 
-	sensors.PushBack(Sensor(this, 425, 108, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 418, 101, SensorType::circle_yellow));
 
 
 	//test
@@ -508,26 +508,24 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 	switch (type)
 	{
 	case circle_yellow:
-		radius = 5;
+		radius = 7;
 		texture = scene->texture_circle_yellow_sensor;
 		sound = scene->sound_circle_yellow_sensor;
-		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
 		break;
 
 	case circle_blue:
-		radius = 5;
+		radius = 7;
 		texture = scene->texture_circle_blue_sensor;
 		sound = scene->sound_circle_blue_sensor;
-		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
 		break;
 
 	case circle_bouncer:
 		int radius = 15;
 		texture = scene->texture_circle_bouncer_sensor;
 		sound = scene->sound_circle_bouncer_sensor;
-		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
 		break;
 	}
 
+	body = scene->App->physics->CreateCircle(x + radius, y + radius, radius, b2_staticBody, 0.0f, false, true);
 	body->listener = scene;
 }
