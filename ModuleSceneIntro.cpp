@@ -15,6 +15,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	sensed = false;
 	show_back = false;
 	check = false;
+	collisioned = false;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -273,6 +274,25 @@ bool ModuleSceneIntro::Start()
 	PhysBody* box = App->physics->CreateRectangle(695, 637, 17, 1, b2_staticBody);
 	box->SetPosition(695, 637, -5.0f);
 
+	//sensors for score
+	texture_circle_yellow_sensor = App->textures->Load("pinball/light_yellow.png");
+	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND8.wav");
+
+	texture_circle_blue_sensor = App->textures->Load("");
+	sound_circle_blue_sensor = App->audio->LoadFx("pinball/SOUND16");
+
+	texture_circle_bouncer_sensor = App->textures->Load("");
+	sound_circle_bouncer_sensor = App->audio->LoadFx("pinball/SOUND12.wav");
+
+	sensors.PushBack(Sensor(this, 425, 108, SensorType::circle_yellow));
+
+
+	//test
+	sensors.PushBack(Sensor(this, 660, 460, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 660, 450, SensorType::circle_yellow));
+
+
+	//sensor for lose the game
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 	sensor->listener = this;
 
@@ -285,6 +305,23 @@ bool ModuleSceneIntro::CleanUp()
 	LOG("Unloading Intro scene");
 
 	return true;
+}
+
+//reinitialize for check collisions
+update_status ModuleSceneIntro::PreUpdate()
+{
+	if (collisioned == false)
+	{
+		for (uint i = 0; i < sensors.Count(); i++)
+		{
+			if (sensors[i].collision == true)
+					sensors[i].collision = false;
+		}
+	}
+
+	collisioned = false;
+
+	return UPDATE_CONTINUE;
 }
 
 // Update: draw background
@@ -306,6 +343,12 @@ update_status ModuleSceneIntro::Update()
 	if (show_back == true)
 	{
 		App->renderer->Blit(background, 0, 0);
+
+		for (uint i = 0; i < sensors.Count(); i++)
+		{
+			if (sensors[i].light == true)
+				App->renderer->Blit(sensors[i].texture, sensors[i].x, sensors[i].y);
+		}
 
 		App->renderer->Blit(App->player->flipL_tex, 360, 600, NULL, 1.0f, App->player->f_l->GetRotation(), 12, 39);
 		App->renderer->Blit(App->player->flipR_tex, 475, 600, NULL, 1.0f, App->player->f_r->GetRotation(), 56, 41);
@@ -361,6 +404,24 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+		App->player->flip_l->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
+		App->player->flip_l->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+		App->player->flip_r->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
+		App->player->flip_r->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		App->player->quicker->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
+		App->player->quicker->EnableMotor(false);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -398,4 +459,72 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			//App->player->ball->SetPosition(0, 0);
 		}
 	}
+
+	for (uint i = 0; i < sensors.Count(); i++)
+	{
+		if (bodyA == sensors[i].body)
+		{
+			if (sensors[i].collision == false)
+			{
+				App->audio->PlayFx(sensors[i].sound); 
+				sensors[i].collision = true;
+
+				sensors[i].light = !sensors[i].light;
+
+				switch (sensors[i].type)
+				{
+				case circle_yellow:
+					App->player->score += 20;
+					break;
+
+				case circle_blue:
+					App->player->score += 10;
+					break;
+
+				case circle_bouncer:
+					App->player->score += 25;
+					break;
+
+				}
+			}
+		}
+	}
+	collisioned = true;
+}
+
+//function for create sensors for score
+Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
+{
+	this->x = x;
+	this->y = y;
+	this->type = type;
+	light = false;
+	collision = false;
+	int radius = 0;
+
+	switch (type)
+	{
+	case circle_yellow:
+		radius = 5;
+		texture = scene->texture_circle_yellow_sensor;
+		sound = scene->sound_circle_yellow_sensor;
+		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
+		break;
+
+	case circle_blue:
+		radius = 5;
+		texture = scene->texture_circle_blue_sensor;
+		sound = scene->sound_circle_blue_sensor;
+		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
+		break;
+
+	case circle_bouncer:
+		int radius = 15;
+		texture = scene->texture_circle_bouncer_sensor;
+		sound = scene->sound_circle_bouncer_sensor;
+		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, 0.0f, false, true);
+		break;
+	}
+
+	body->listener = scene;
 }
