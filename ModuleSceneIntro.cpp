@@ -343,24 +343,6 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
-		App->player->flip_l->EnableMotor(true);
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
-		App->player->flip_l->EnableMotor(false);
-
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
-		App->player->flip_r->EnableMotor(true);
-
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
-		App->player->flip_r->EnableMotor(false);
-
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->player->quicker->EnableMotor(false);
-
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
-		App->player->quicker->EnableMotor(true);
-
 	return UPDATE_CONTINUE;
 }
 
@@ -391,9 +373,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 		if (bodyB == App->player->ball)
 		{
-			b2Vec2 speed(0, 0);
+			/*b2Vec2 speed(0, 0);
 			App->player->ball->body->SetLinearVelocity(speed);
-			App->player->ball->body->SetAngularVelocity(0.0f);
+			App->player->ball->body->SetAngularVelocity(0.0f);*/
 			//TODO: Set respawn point
 			//App->player->ball->SetPosition(0, 0);
 		}

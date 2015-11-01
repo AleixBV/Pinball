@@ -337,6 +337,12 @@ void PhysBody::GetPosition(int& x, int &y) const
 	y = METERS_TO_PIXELS(pos.y) - (height);
 }
 
+void PhysBody::Push(float x, float y)
+{
+	b2Vec2 push(x, y);
+	body->ApplyForceToCenter(push, true);
+}
+
 void PhysBody::SetPosition(int x, int y, float angle)
 {
 	body->SetTransform(b2Vec2(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y)), DEGTORAD * angle);
@@ -439,4 +445,10 @@ b2PrismaticJoint* ModulePhysics::CreatePrismaticJoint(const PhysBody* a, const P
 	jointDef.enableMotor = true;
 
 	return ((b2PrismaticJoint*)world->CreateJoint(&jointDef));
+}
+
+void ModulePhysics::DeleteBody(PhysBody* body)
+{
+	assert(body);
+	delete body;
 }
