@@ -272,6 +272,14 @@ bool ModuleSceneIntro::Start()
 
 	App->physics->CreateChain(0, 0, bound_4, 6, b2_staticBody, 0.0f, 1.5f);
 
+	int bound_5[8] = {
+		528, 251,
+		537, 255,
+		541, 248,
+		530, 243
+	};
+
+	App->physics->CreateChain(0, 0, bound_5, 8, b2_staticBody, 0.0f, 1.5f);
 
 	//Create a box so the ball at the begining doesn't fall
 	PhysBody* box = App->physics->CreateRectangle(695, 637, 17, 1, b2_staticBody);
