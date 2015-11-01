@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -307,22 +308,22 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
-		flip_l->EnableMotor(true);
+		App->player->flip_l->EnableMotor(true);
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
-		flip_l->EnableMotor(false);
+		App->player->flip_l->EnableMotor(false);
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
-		flip_r->EnableMotor(true);
+		App->player->flip_r->EnableMotor(true);
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
-		flip_r->EnableMotor(false);
+		App->player->flip_r->EnableMotor(false);
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		quicker->EnableMotor(true);
+		App->player->quicker->EnableMotor(true);
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
-		quicker->EnableMotor(false);
+		App->player->quicker->EnableMotor(false);
 
 	return UPDATE_CONTINUE;
 }

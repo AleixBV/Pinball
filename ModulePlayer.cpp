@@ -1,9 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
+#include "ModuleRender.h"
 #include "ModulePlayer.h"
 #include "ModuleTextures.h"
 #include "ModulePhysics.h"
-#include "ModuleRender.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -44,8 +44,8 @@ bool ModulePlayer::Start()
 		482, 609
 	};
 	//-------------------------------
-	f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.0f);
-	f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.0f);
+	f_r = App->physics->CreatePolygon(0, 0, flipper_r, 12, b2_dynamicBody, 2.5f);
+	f_l = App->physics->CreatePolygon(0, 0, flipper_l, 12, b2_dynamicBody, 2.5f);
 
 	PhysBody* c_l = App->physics->CreateCircle(371, 639, 1, b2_staticBody);
 	PhysBody* c_r = App->physics->CreateCircle(533, 640, 1, b2_staticBody);
@@ -53,8 +53,8 @@ bool ModulePlayer::Start()
 	b2Vec2 fl_pivot(PIXEL_TO_METERS(371), PIXEL_TO_METERS(639));
 	b2Vec2 fr_pivot(PIXEL_TO_METERS(533), PIXEL_TO_METERS(640));
 
-	flip_l = App->physics->CreateRevoluteJoint(c_l, f_l, c_l->body->GetLocalCenter(), fl_pivot, true, 0, 70, -200, 100);
-	flip_r = App->physics->CreateRevoluteJoint(c_r, f_r, c_r->body->GetLocalCenter(), fr_pivot, true, -70, 0, 200, 100);
+	flip_l = App->physics->CreateRevoluteJoint(c_l, f_l, c_l->body->GetLocalCenter(), fl_pivot, true, 0, 70, -150, 100);
+	flip_r = App->physics->CreateRevoluteJoint(c_r, f_r, c_r->body->GetLocalCenter(), fr_pivot, true, -70, 0, 150, 100);
 
 	//Quicker
 	int quicker_b[8] = {

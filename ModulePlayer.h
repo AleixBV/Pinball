@@ -27,7 +27,6 @@ public:
 	PhysBody* f_r;
 	PhysBody* ball;
 
-private:
 	b2RevoluteJoint* flip_l;
 	b2RevoluteJoint* flip_r;
 	b2PrismaticJoint* quicker;
