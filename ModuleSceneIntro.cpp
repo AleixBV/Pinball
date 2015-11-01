@@ -508,13 +508,13 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 	switch (type)
 	{
 	case circle_yellow:
-		radius = 7;
+		radius = 6;
 		texture = scene->texture_circle_yellow_sensor;
 		sound = scene->sound_circle_yellow_sensor;
 		break;
 
 	case circle_blue:
-		radius = 7;
+		radius = 6;
 		texture = scene->texture_circle_blue_sensor;
 		sound = scene->sound_circle_blue_sensor;
 		break;
