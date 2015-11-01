@@ -23,6 +23,7 @@ public:
 	SDL_Texture* flipL_tex;
 	SDL_Texture* flipR_tex;
 	SDL_Texture* ball_tex;
+	SDL_Texture* quicker_tex;
 
 	uint start_game_sound;
 	uint flippers_sound;
@@ -31,6 +32,7 @@ public:
 	PhysBody* f_l;
 	PhysBody* f_r;
 	PhysBody* ball;
+	PhysBody* quicker_box;
 
 	b2RevoluteJoint* flip_l;
 	b2RevoluteJoint* flip_r;

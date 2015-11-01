@@ -16,7 +16,7 @@ ModulePlayer::~ModulePlayer()
 {
 	flip_l = flip_r = NULL;
 	quicker = NULL;
-	flipL_tex = flipR_tex = ball_tex = NULL;
+	flipL_tex = flipR_tex = ball_tex = quicker_tex = NULL;
 }
 
 // Load assets
@@ -28,6 +28,7 @@ bool ModulePlayer::Start()
 	flipL_tex = App->textures->Load("pinball/flip_es.png");
 	flipR_tex = App->textures->Load("pinball/flip_dr.png");
 	ball_tex = App->textures->Load("pinball/ball.png");
+	quicker_tex = App->textures->Load("pinball/quicker.png");
 
 	flippers_sound = App->audio->LoadFx("pinball/SOUND5.wav");
 	quicker_sound = App->audio->LoadFx("pinball/SOUND14.wav");
@@ -72,7 +73,7 @@ bool ModulePlayer::Start()
 		683, 684
 	};
 
-	PhysBody* quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
+	quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
 	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, false, true);
 
 	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);
@@ -107,15 +108,6 @@ update_status ModulePlayer::Update()
 	{
 		App->audio->PlayFx(quicker_sound);
 	}
-
-	//Render flippers
-	App->renderer->Blit(flipL_tex, 360, 600, NULL, 1.0f, f_l->GetRotation(), 12, 39);
-	App->renderer->Blit(flipR_tex, 475, 600, NULL, 1.0f, f_r->GetRotation(), 56, 41);
-
-	//Render the ball
-	int ball_x, ball_y;
-	ball->GetPosition(ball_x, ball_y);
-	App->renderer->Blit(ball_tex, ball_x, ball_y, NULL, 1.0f, ball->GetRotation());
 
 	return UPDATE_CONTINUE;
 }

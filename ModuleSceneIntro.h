@@ -25,6 +25,7 @@ public:
 	bool sensed;
 
 	SDL_Texture* background;
+	SDL_Texture* frontground;
 	SDL_Texture* circle;
 	uint start_game_sound;
 	p2Point<int> ray;
@@ -34,7 +35,4 @@ public:
 
 private:
 	bool show_back;
-	b2RevoluteJoint* flip_l;
-	b2RevoluteJoint* flip_r;
-	b2PrismaticJoint* quicker;
 };

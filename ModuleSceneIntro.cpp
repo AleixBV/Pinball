@@ -10,7 +10,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	background = NULL;
+	background = frontground = NULL;
 	ray_on = false;
 	sensed = false;
 	show_back = false;
@@ -25,10 +25,8 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+	frontground = App->textures->Load("pinball/frontground.png");
 	background = App->textures->Load("pinball/windows_pinball.png");
-
-	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
-	App->audio->PlayFx(start_game_sound);
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -211,7 +209,7 @@ bool ModuleSceneIntro::Start()
 		633, 340,
 		677, 692
 	};
-	
+
 	//--------------------------------
 
 	int radius = 15;
@@ -241,7 +239,7 @@ bool ModuleSceneIntro::Start()
 		340, 483,
 		370, 560,
 		365, 578
-	}; 
+	};
 
 	int bound_2[8] = {
 		578, 474,
@@ -270,7 +268,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;
 		ray.x = App->input->GetMouseX();
@@ -278,16 +276,33 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody, 0.0f, true);
+		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody, false, 0);
 
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
-		show_back= !show_back;
+		show_back = !show_back;
 
-	if (show_back==true)
+	if (show_back == true)
+	{
 		App->renderer->Blit(background, 0, 0);
 
+		App->renderer->Blit(App->player->flipL_tex, 360, 600, NULL, 1.0f, App->player->f_l->GetRotation(), 12, 39);
+		App->renderer->Blit(App->player->flipR_tex, 475, 600, NULL, 1.0f, App->player->f_r->GetRotation(), 56, 41);
+
+		//Render the ball
+		int ball_x, ball_y;
+		App->player->ball->GetPosition(ball_x, ball_y);
+		int quicker_x, quicker_y;
+		App->player->quicker_box->GetPosition(quicker_x, quicker_y);
+
+		App->renderer->Blit(App->player->ball_tex, ball_x, ball_y, NULL, 1.0f);
+		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
+		App->renderer->Blit(frontground, 0, 0);
+
+	}
+
+
 	// Prepare for raycast ------------------------------------------------------
-	
+
 	iPoint mouse;
 	mouse.x = App->input->GetMouseX();
 	mouse.y = App->input->GetMouseY();
@@ -300,27 +315,27 @@ update_status ModuleSceneIntro::Update()
 
 	while(c != NULL)
 	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
+	int x, y;
+	c->data->GetPosition(x, y);
+	if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+	App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+	c = c->next;
 	}
 
 	c = boxes.getFirst();
 	*/
-	
+
 
 	// ray -----------------
-	if(ray_on == true)
+	if (ray_on == true)
 	{
-		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
+		fVector destination(mouse.x - ray.x, mouse.y - ray.y);
 		destination.Normalize();
 		destination *= ray_hit;
 
 		App->renderer->DrawLine(ray.x, ray.y, ray.x + destination.x, ray.y + destination.y, 255, 255, 255);
 
-		if(normal.x != 0.0f)
+		if (normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
 
