@@ -234,22 +234,40 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateCircle(453, 225, radius, b2_staticBody, 1.5f);
 	App->physics->CreateCircle(486, 170, radius, b2_staticBody, 1.5f);
 
+	//bounds
 	int bound_1[8] = {
-		325, 475,
-		340, 483,
-		370, 560,
-		365, 578
+		324, 477,
+		328, 479,
+		360, 572,
+		358, 576
 	};
 
 	int bound_2[8] = {
-		578, 474,
-		563, 483,
-		538, 563,
-		543, 581
+		581, 481,
+		574, 482,
+		545, 572,
+		549, 575
 	};
 
-	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 0.8f);
-	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 0.8f);
+	App->physics->CreateChain(0, 0, bound_1, 8, b2_staticBody, 0.0f, 1.5f);
+	App->physics->CreateChain(0, 0, bound_2, 8, b2_staticBody, 0.0f, 1.5f);
+
+	int bound_3[6] = {
+		573, 365,
+		570, 318,
+		575, 315
+	};
+
+	App->physics->CreateChain(0, 0, bound_3, 6, b2_staticBody, 0.0f, 1.5f);
+
+	int bound_4[6] = {
+		319, 417,
+		320, 372,
+		314, 372
+	};
+
+	App->physics->CreateChain(0, 0, bound_4, 6, b2_staticBody, 0.0f, 1.5f);
+
 
 	//Create a box so the ball at the begining doesn't fall
 	PhysBody* box = App->physics->CreateRectangle(695, 637, 17, 1, b2_staticBody);

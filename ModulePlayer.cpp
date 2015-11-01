@@ -111,5 +111,26 @@ update_status ModulePlayer::Update()
 		App->audio->PlayFx(quicker_sound);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		ball->Push(0, -100);
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+		flip_l->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
+		flip_l->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+		flip_r->EnableMotor(true);
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
+		flip_r->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		quicker->EnableMotor(false);
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
+		quicker->EnableMotor(true);
+
 	return UPDATE_CONTINUE;
 }
