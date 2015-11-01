@@ -4,6 +4,8 @@
 #include "ModulePlayer.h"
 #include "ModuleWindow.h"
 #include "ModuleTextures.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModulePhysics.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -26,6 +28,9 @@ bool ModulePlayer::Start()
 	flipL_tex = App->textures->Load("pinball/flip_es.png");
 	flipR_tex = App->textures->Load("pinball/flip_dr.png");
 	ball_tex = App->textures->Load("pinball/ball.png");
+
+	flippers_sound = App->audio->LoadFx("pinball/SOUND5.wav");
+	quicker_sound = App->audio->LoadFx("pinball/SOUND14.wav");
 
 	//Flippers
 	//--------------------------------
@@ -90,6 +95,18 @@ update_status ModulePlayer::Update()
 {
 	title.create("Lifes: %i. Score:%i. Last score:%i.", life, score, last_score);
 	App->window->SetTitle(title.GetString());
+
+	//sounds
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+	{
+		App->audio->PlayFx(flippers_sound);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
+	{
+		App->audio->PlayFx(quicker_sound);
+	}
+
 	//Render flippers
 	App->renderer->Blit(flipL_tex, 360, 600, NULL, 1.0f, f_l->GetRotation(), 12, 39);
 	App->renderer->Blit(flipR_tex, 475, 600, NULL, 1.0f, f_r->GetRotation(), 56, 41);
@@ -102,13 +119,16 @@ update_status ModulePlayer::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer::dead()
+void ModulePlayer::dead(PhysBody* ball_dead)
 {
 	if (life > 0)
 	{
 		//Need to delete the ball and create a new one
 		life -= 1;
-		//ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
+		if (ball_dead == ball)
+		{
+			ball->SetPosition(677, 600);
+		}
 	}
 	/*if (life == 0)
 	{

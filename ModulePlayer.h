@@ -19,12 +19,16 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void dead();
+	void dead(PhysBody* ball_dead);
 
 public:
 	SDL_Texture* flipL_tex;
 	SDL_Texture* flipR_tex;
 	SDL_Texture* ball_tex;
+
+	uint start_game_sound;
+	uint flippers_sound;
+	uint quicker_sound;
 
 	PhysBody* f_l;
 	PhysBody* f_r;

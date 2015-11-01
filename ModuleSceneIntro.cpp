@@ -26,7 +26,9 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	background = App->textures->Load("pinball/windows_pinball.png");
-	App->audio->PlayMusic("pinball/SOUND1.wav");
+
+	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
+	App->audio->PlayFx(start_game_sound);
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -335,7 +337,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
-	App->audio->PlayFx(bonus_fx);
+	//App->audio->PlayFx(bonus_fx);
 
 	/*
 	if(bodyA)
@@ -354,6 +356,6 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (sensor->body == bodyA->body && check != true)
 	{
 		check = true;
-		App->player->dead();
+		App->player->dead(bodyB);
 	}
 }

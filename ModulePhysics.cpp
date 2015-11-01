@@ -336,6 +336,11 @@ void PhysBody::GetPosition(int& x, int &y) const
 	y = METERS_TO_PIXELS(pos.y) - (height);
 }
 
+void PhysBody::SetPosition(int x, int y)
+{
+	body->SetTransform(b2Vec2(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y)), 0.0f);
+}
+
 float PhysBody::GetRotation() const
 {
 	return RADTODEG * body->GetAngle();

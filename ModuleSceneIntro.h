@@ -26,7 +26,7 @@ public:
 
 	SDL_Texture* background;
 	SDL_Texture* circle;
-	uint bonus_fx;
+	uint start_game_sound;
 	p2Point<int> ray;
 	bool ray_on;
 
