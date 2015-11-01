@@ -58,11 +58,12 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType bodyType, float restitution, bool sensor)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType bodyType, float restitution, bool bullet, bool sensor)
 {
 	b2BodyDef body;
 	body.type = bodyType;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.bullet = bullet;
 
 	b2Body* b = world->CreateBody(&body);
 

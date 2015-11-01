@@ -73,12 +73,12 @@ bool ModulePlayer::Start()
 	};
 
 	PhysBody* quicker_box = App->physics->CreatePolygon(5, 0, quicker_b, 8, b2_dynamicBody, 1.0f);
-	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, true);
+	PhysBody* quick_point = App->physics->CreateCircle(670, 550, 10, b2_staticBody, 0, false, true);
 
 	quicker = App->physics->CreatePrismaticJoint(quick_point, quicker_box);
 
 	//Ball
-	ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody);
+	ball = App->physics->CreateCircle(677, 600, 10, b2_dynamicBody, 0.0f, true);
 	ball->listener = this;
 
 	return true;
