@@ -17,6 +17,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 	world = NULL;
 	mouse_joint = NULL;
 	debug = true;
+	body_clicked = NULL;
 }
 
 // Destructor
@@ -190,8 +191,6 @@ update_status ModulePhysics::PostUpdate()
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
-	b2Body* body_clicked = NULL;
-	b2Vec2 mouse_position;
 
 	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
@@ -298,8 +297,22 @@ update_status ModulePhysics::PostUpdate()
 
 	// TODO 3: If the player keeps pressing the mouse button, update
 	// target position and draw a red line between both anchor points
+	if (body_clicked != NULL && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		mouse_position.x = PIXEL_TO_METERS(App->input->GetMouseX());
+		mouse_position.y = PIXEL_TO_METERS(App->input->GetMouseY());
+		mouse_joint->SetTarget(mouse_position);
+
+		App->renderer->DrawLine(mouse_position.x, mouse_position.y, body_clicked->GetPosition().x, body_clicked->GetPosition().y, 255, 0, 0, false);
+	}
 
 	// TODO 4: If the player releases the mouse button, destroy the joint
+	if (body_clicked != NULL && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+	{
+		body_clicked = NULL;
+		
+		//TODO delete(mouse_joint);
+	}
 
 	return UPDATE_CONTINUE;
 }

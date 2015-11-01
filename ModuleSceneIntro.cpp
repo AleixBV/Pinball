@@ -26,6 +26,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	background = App->textures->Load("pinball/windows_pinball.png");
+	App->audio->PlayMusic("pinball/SOUND1.wav");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
