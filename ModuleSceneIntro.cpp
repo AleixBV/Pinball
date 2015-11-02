@@ -14,9 +14,9 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ray_on = false;
 	sensed = false;
 	show_back = false;
-	check = false;
 	collisioned = false;
 	died = false;
+	loser = false;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -333,13 +333,23 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	collisioned = false;
 
-	if (died == true)
+	if (died)
 	{
 		b2Vec2 speed(0, 0);
 		App->player->ball->body->SetLinearVelocity(speed);
 		App->player->ball->body->SetAngularVelocity(0.0f);
 		App->player->ball->SetPosition(677, 600);
 		died = false;
+	}
+
+	if (loser)
+	{
+		for (uint i = 0; i < sensors.Count(); i++)
+		{
+			if (sensors[i].light == true)
+				sensors[i].light = false;
+		}
+		loser = false;
 	}
 
 	return UPDATE_CONTINUE;
@@ -466,14 +476,24 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}*/
 	
 
-	if (sensor->body == bodyA->body && check != true)
+	if (sensor->body == bodyA->body && bodyB == App->player->ball)
 	{
-		check = true;
-		App->player->life--;
-
-		if (bodyB == App->player->ball)
+		if (App->player->life >= 0)
 		{
-			died = true;
+			App->player->life--;
+
+			if (bodyB == App->player->ball)
+			{
+				died = true;
+			}
+		}
+
+		if (App->player->life < 0)
+		{
+			App->player->last_score = App->player->score;
+			App->player->score = 0;
+			loser = true;
+			App->player->life = 3;
 		}
 	}
 

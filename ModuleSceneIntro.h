@@ -69,11 +69,10 @@ public:
 	bool ray_on;
 	p2DynArray<Sensor> sensors;
 
-	bool check;
-
 	bool collisioned;//to check if there are collision in last frame
 
 	bool died;
+	bool loser;
 
 private:
 	bool show_back;
