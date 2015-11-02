@@ -297,12 +297,12 @@ bool ModuleSceneIntro::Start()
 	sound_circle_bouncer_sensor = App->audio->LoadFx("pinball/SOUND12.wav");
 
 	sensors.PushBack(Sensor(this, 418, 101, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 446, 99, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 475, 103, SensorType::circle_yellow));
 
-
-	//test
-	sensors.PushBack(Sensor(this, 660, 460, SensorType::circle_yellow));
-	sensors.PushBack(Sensor(this, 660, 450, SensorType::circle_yellow));
-
+	sensors.PushBack(Sensor(this, 350, 78, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 293, 94, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 327, 71, SensorType::circle_yellow));
 
 	//sensor for lose the game
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
