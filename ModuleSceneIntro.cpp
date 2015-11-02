@@ -508,20 +508,23 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 				sensors[i].light = !sensors[i].light;
 
-				switch (sensors[i].type)
+				if (sensors[i].light)
 				{
-				case circle_yellow:
-					App->player->score += 20;
-					break;
+					switch (sensors[i].type)
+					{
+					case circle_yellow:
+						App->player->score += 20;
+						break;
 
-				case circle_blue:
-					App->player->score += 10;
-					break;
+					case circle_blue:
+						App->player->score += 10;
+						break;
 
-				case circle_bouncer:
-					App->player->score += 25;
-					break;
+					case circle_bouncer:
+						App->player->score += 25;
+						break;
 
+					}
 				}
 			}
 		}
