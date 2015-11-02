@@ -73,6 +73,8 @@ public:
 
 	bool collisioned;//to check if there are collision in last frame
 
+	bool died;
+
 private:
 	bool show_back;
 };

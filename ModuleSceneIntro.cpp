@@ -16,6 +16,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	show_back = false;
 	check = false;
 	collisioned = false;
+	died = false;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -332,6 +333,15 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	collisioned = false;
 
+	if (died == true)
+	{
+		b2Vec2 speed(0, 0);
+		App->player->ball->body->SetLinearVelocity(speed);
+		App->player->ball->body->SetAngularVelocity(0.0f);
+		App->player->ball->SetPosition(677, 600);
+		died = false;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -463,11 +473,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 		if (bodyB == App->player->ball)
 		{
-			/*b2Vec2 speed(0, 0);
-			App->player->ball->body->SetLinearVelocity(speed);
-			App->player->ball->body->SetAngularVelocity(0.0f);*/
-			//TODO: Set respawn point
-			//App->player->ball->SetPosition(0, 0);
+			died = true;
 		}
 	}
 
