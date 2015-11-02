@@ -478,7 +478,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (sensor->body == bodyA->body && bodyB == App->player->ball)
 	{
-		if (App->player->life >= 0)
+		if (App->player->life > 0)
 		{
 			App->player->life--;
 
@@ -488,7 +488,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			}
 		}
 
-		if (App->player->life < 0)
+		if (App->player->life <= 0)
 		{
 			App->player->last_score = App->player->score;
 			App->player->score = 0;
