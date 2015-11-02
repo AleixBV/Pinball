@@ -304,6 +304,10 @@ bool ModuleSceneIntro::Start()
 	sensors.PushBack(Sensor(this, 293, 94, SensorType::circle_yellow));
 	sensors.PushBack(Sensor(this, 327, 71, SensorType::circle_yellow));
 
+	sensors.PushBack(Sensor(this, 315, 189, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 315, 205, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 317, 218, SensorType::circle_yellow));
+
 	//sensor for lose the game
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 	sensor->listener = this;
