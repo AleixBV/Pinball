@@ -26,6 +26,11 @@ public:
 	SDL_Texture* ball_tex;
 	SDL_Texture* quicker_tex;
 
+	SDL_Texture* ball_left1;
+	SDL_Texture* ball_left2;
+	SDL_Texture* ball_left3;
+
+
 	uint start_game_sound;
 	uint flippers_sound;
 	uint quicker_sound;
