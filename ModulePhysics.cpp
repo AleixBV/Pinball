@@ -188,8 +188,17 @@ update_status ModulePhysics::PostUpdate()
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
-	if(!debug)
+	if (!debug)
+	{
+		if (body_clicked != NULL)
+		{
+			body_clicked = NULL;
+
+			DeleteJoint(mouse_joint);
+		}
+
 		return UPDATE_CONTINUE;
+	}
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
@@ -313,7 +322,7 @@ update_status ModulePhysics::PostUpdate()
 	{
 		body_clicked = NULL;
 		
-		world->DestroyJoint(mouse_joint);
+		DeleteJoint(mouse_joint);
 	}
 
 	return UPDATE_CONTINUE;
@@ -462,4 +471,11 @@ void ModulePhysics::DeleteBody(PhysBody* body)
 	assert(body);
 	//delete body;
 	world->DestroyBody(body->body);
+}
+
+void ModulePhysics::DeleteJoint(b2Joint* joint)
+{
+	assert(joint);
+	//delete body;
+	world->DestroyJoint(joint);
 }

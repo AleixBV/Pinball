@@ -53,6 +53,7 @@ public:
 	b2PrismaticJoint* CreatePrismaticJoint(const PhysBody* a, const PhysBody* b);//Very specifick for our quicker
 
 	void DeleteBody(PhysBody* body);
+	void DeleteJoint(b2Joint* joint);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
