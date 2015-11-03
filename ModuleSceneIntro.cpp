@@ -38,6 +38,9 @@ bool ModuleSceneIntro::Start()
 	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
 	App->audio->PlayFx(start_game_sound);
 
+	die_sound = App->audio->LoadFx("pinball/SOUND27.wav");
+	loser_sound = App->audio->LoadFx("pinball/SOUND3.wav");
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	//--------------------------------
@@ -380,23 +383,21 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	if (died)
 	{
-		b2Vec2 speed(0, 0);
-		App->player->ball->body->SetLinearVelocity(speed);
-		App->player->ball->body->SetAngularVelocity(0.0f);
-		App->player->ball->SetPosition(680, 600);
+		if (loser == false)
+		{
+			b2Vec2 speed(0, 0);
+			App->player->ball->body->SetLinearVelocity(speed);
+			App->player->ball->body->SetAngularVelocity(0.0f);
+			App->player->ball->SetPosition(680, 600);
+		}
+
+		App->audio->PlayFx(die_sound);
+		die_count = SDL_GetTicks();
+
 		died = false;
 	}
 
-	if (body_to_destroy.Count() != 0)
-	{
-		for (int i = 0; i < body_to_destroy.Count(); i++)
-		{
-			App->physics->DeleteBody(body_to_destroy[i]);
-		}
-		body_to_destroy.Clear();
-	}
-
-	if (loser)
+	if (loser && (SDL_GetTicks() - die_count) > 1250)
 	{
 		for (uint i = 0; i < sensors.Count(); i++)
 		{
@@ -407,7 +408,30 @@ update_status ModuleSceneIntro::PreUpdate()
 		block1->DeleteBody(block1);
 		block2->DeleteBody(block2);
 
+		App->audio->PlayFx(loser_sound);
+		loser_count = SDL_GetTicks();
+
 		loser = false;
+		restart = true;
+	}
+
+	if (restart && (SDL_GetTicks() - loser_count) > 2400)
+	{
+		b2Vec2 speed(0, 0);
+		App->player->ball->body->SetLinearVelocity(speed);
+		App->player->ball->body->SetAngularVelocity(0.0f);
+		App->player->ball->SetPosition(680, 600);
+
+		restart = false;
+	}
+
+	if (body_to_destroy.Count() != 0)
+	{
+		for (int i = 0; i < body_to_destroy.Count(); i++)
+		{
+			App->physics->DeleteBody(body_to_destroy[i]);
+		}
+		body_to_destroy.Clear();
 	}
 
 	return UPDATE_CONTINUE;
