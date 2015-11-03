@@ -220,20 +220,20 @@ bool ModuleSceneIntro::Start()
 
 	int radius = 15;
 
-	App->physics->CreateChain(0, 0, pinball_1, 52, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_2, 60, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_3, 12, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_4, 32, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_5, 20, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_6, 12, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_7, 8, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_8, 12, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_9, 6, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_10, 6, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_11, 8, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody);
-	App->physics->CreateChain(0, 0, pinball_14, 16, b2_staticBody);
+	App->physics->CreateChain(0, 0, pinball_1, 52, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_2, 60, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_3, 12, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_4, 32, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_5, 20, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_6, 12, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_7, 8, b2_staticBody), 1.0f, 0.25f;
+	App->physics->CreateChain(0, 0, pinball_8, 12, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_9, 6, b2_staticBody), 1.0f, 0.25f;
+	App->physics->CreateChain(0, 0, pinball_10, 6, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_11, 8, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody, 1.0f, 0.25f);
+	App->physics->CreateChain(0, 0, pinball_14, 16, b2_staticBody, 1.0f, 0.25f);
 
 	App->physics->CreateCircle(331, 97, radius, b2_staticBody, 1.5f);
 	App->physics->CreateCircle(421, 180, radius, b2_staticBody, 1.5f);
@@ -337,9 +337,10 @@ bool ModuleSceneIntro::Start()
 	sensor->listener = this;
 
 	//Pushers in each side of the pinball
-	pusher1 = App->physics->CreateRectangle(215, 640, 40, 20, b2_staticBody, true);
+	
+	pusher1 = App->physics->CreateRectangle(215, 640, 40, 20, b2_staticBody, 1.5f, true);
 	pusher1->listener = this;
-	pusher2 = App->physics->CreateRectangle(642, 640, 40, 20, b2_staticBody, true);
+	pusher2 = App->physics->CreateRectangle(642, 640, 40, 20, b2_staticBody, 1.5f, true);
 	pusher2->listener = this;
 
 	return ret;
@@ -491,7 +492,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
 		App->player->quicker->EnableMotor(false);
 
-	if (createBlock1 == true && (SDL_GetTicks() - startCollision) >= 500)
+	if (createBlock1 == true && (SDL_GetTicks() - startCollision) >= 150)
 	{
 		int block_1[8] = {
 			209, 568,
@@ -500,10 +501,10 @@ update_status ModuleSceneIntro::Update()
 			242, 590
 		};
 		
-		block1 = App->physics->CreateChain(0, 0, block_1, 8, b2_staticBody);
+		block1 = App->physics->CreateChain(0, 0, block_1, 8, b2_staticBody, 1.0f, 0.25f);
 		createBlock1 = false;
 	}
-	if (createBlock2 == true && (SDL_GetTicks() - startCollision) >= 500)
+	if (createBlock2 == true && (SDL_GetTicks() - startCollision) >= 150)
 	{
 		int block_2[8] = {
 			623, 623,
@@ -511,7 +512,7 @@ update_status ModuleSceneIntro::Update()
 			655, 591,
 			655, 596
 		};
-		block2 = App->physics->CreateChain(0, 0, block_2, 8, b2_staticBody);
+		block2 = App->physics->CreateChain(0, 0, block_2, 8, b2_staticBody, 1.0f, 0.25f);
 		createBlock2 = false;
 	}
 
