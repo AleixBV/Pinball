@@ -68,6 +68,7 @@ public:
 	p2Point<int> ray;
 	bool ray_on;
 	p2DynArray<Sensor> sensors;
+	p2DynArray<PhysBody*> body_to_destroy;
 
 	bool collisioned;//to check if there are collision in last frame
 

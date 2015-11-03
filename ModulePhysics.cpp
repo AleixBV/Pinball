@@ -460,5 +460,6 @@ b2PrismaticJoint* ModulePhysics::CreatePrismaticJoint(const PhysBody* a, const P
 void ModulePhysics::DeleteBody(PhysBody* body)
 {
 	assert(body);
-	delete body;
+	//delete body;
+	world->DestroyBody(body->body);
 }

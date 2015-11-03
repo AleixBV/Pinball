@@ -338,9 +338,9 @@ bool ModuleSceneIntro::Start()
 
 	//Pushers in each side of the pinball
 	
-	pusher1 = App->physics->CreateRectangle(215, 640, 40, 20, b2_staticBody, 1.5f, true);
+	pusher1 = App->physics->CreateRectangle(215, 640, 40, 20, b2_staticBody, 3.0f);
 	pusher1->listener = this;
-	pusher2 = App->physics->CreateRectangle(642, 640, 40, 20, b2_staticBody, 1.5f, true);
+	pusher2 = App->physics->CreateRectangle(642, 640, 40, 20, b2_staticBody, 3.0f);
 	pusher2->listener = this;
 
 	return ret;
@@ -373,8 +373,17 @@ update_status ModuleSceneIntro::PreUpdate()
 		b2Vec2 speed(0, 0);
 		App->player->ball->body->SetLinearVelocity(speed);
 		App->player->ball->body->SetAngularVelocity(0.0f);
-		App->player->ball->SetPosition(677, 600);
+		App->player->ball->SetPosition(680, 600);
 		died = false;
+	}
+
+	if (body_to_destroy.Count() != 0)
+	{
+		for (int i = 0; i < body_to_destroy.Count(); i++)
+		{
+			App->physics->DeleteBody(body_to_destroy[i]);
+		}
+		body_to_destroy.Clear();
 	}
 
 	if (loser)
@@ -405,7 +414,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody, false, 0);
+		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody);
 
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 		show_back = !show_back;
@@ -539,18 +548,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}*/
 	if (bodyA == pusher1 || bodyB == pusher1) 
 	{
-		App->player->ball->Push(0.0f, -200.0f);
+		//App->player->ball->Push(0.0f, -200.0f);
 		startCollision = SDL_GetTicks();
 		createBlock1 = true;
 	}
 	if (bodyA == pusher2 || bodyB == pusher2)
 	{
-		App->player->ball->Push(0.0f, -200.0f);
+		//App->player->ball->Push(0.0f, -200.0f);
 		startCollision = SDL_GetTicks();
 		createBlock2 = true;
 	}
 
-	if (sensor->body == bodyA->body && bodyB == App->player->ball)
+	if (bodyA == sensor && bodyB != sensor)
 	{
 		if (App->player->life > 0)
 		{
@@ -560,6 +569,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			{
 				died = true;
 			}
+			else if (bodyB != sensor)
+				body_to_destroy.PushBack(bodyB);
 		}
 
 		if (App->player->life <= 0)
@@ -568,6 +579,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			App->player->score = 0;
 			loser = true;
 			App->player->life = 3;
+
+			if (died == false)
+				died = true;
 		}
 	}
 
