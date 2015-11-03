@@ -230,9 +230,6 @@ bool ModuleSceneIntro::Start()
 	};
 
 	//--------------------------------
-
-	int radius = 15;
-
 	App->physics->CreateChain(0, 0, pinball_1, 52, b2_staticBody, 1.0f, 0.25f);
 	App->physics->CreateChain(0, 0, pinball_2, 60, b2_staticBody, 1.0f, 0.25f);
 	App->physics->CreateChain(0, 0, pinball_3, 12, b2_staticBody, 1.0f, 0.25f);
@@ -248,10 +245,10 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody, 1.0f, 0.25f);
 	App->physics->CreateChain(0, 0, pinball_14, 16, b2_staticBody, 1.0f, 0.25f);
 
-	App->physics->CreateCircle(331, 97, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(421, 180, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(453, 225, radius, b2_staticBody, 1.5f);
-	App->physics->CreateCircle(486, 170, radius, b2_staticBody, 1.5f);
+	sensors.PushBack(Sensor(this, 331, 97, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 421, 180, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 453, 225, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 486, 170, SensorType::circle_bouncer, 1.5f, false));
 
 	//bounds
 	int bound_1[8] = {
@@ -307,7 +304,7 @@ bool ModuleSceneIntro::Start()
 	texture_circle_blue_sensor = App->textures->Load("pinball/light_blue.png");
 	sound_circle_blue_sensor = App->audio->LoadFx("pinball/SOUND16.wav");
 
-	texture_circle_bouncer_sensor = App->textures->Load("pinball/light_blue.png");
+	texture_circle_bouncer_sensor = App->textures->Load("pinball/light_bouncer.png");
 	sound_circle_bouncer_sensor = App->audio->LoadFx("pinball/SOUND12.wav");
 
 	sensors.PushBack(Sensor(this, 418, 101, SensorType::circle_yellow));
@@ -394,6 +391,15 @@ update_status ModuleSceneIntro::PreUpdate()
 		{
 			if (sensors[i].collision == true)
 					sensors[i].collision = false;
+		}
+	}
+
+	for (uint i = 0; i < sensors.Count(); i++)
+	{
+		if (sensors[i].type == circle_bouncer && sensors[i].light == true)
+		{
+			if ((SDL_GetTicks() - sensors[i].timer) > 2000)
+				sensors[i].light = false;
 		}
 	}
 
@@ -511,7 +517,7 @@ update_status ModuleSceneIntro::Update()
 
 		for (uint i = 0; i < sensors.Count(); i++)
 		{
-			if (sensors[i].light == true)
+			if (sensors[i].type != circle_bouncer && sensors[i].light == true)
 				App->renderer->Blit(sensors[i].texture, sensors[i].x, sensors[i].y);
 		}
 
@@ -533,6 +539,7 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(App->player->ball_tex, ball_x, ball_y, NULL, 1.0f);
 		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
 		App->renderer->Blit(frontground, 0, 0);
+
 
 		if (loser == false && restart == false)
 		{
@@ -559,6 +566,13 @@ update_status ModuleSceneIntro::Update()
 		if (block2 != NULL)
 		{
 			App->renderer->Blit(block2_tex, 623, 597);
+		}
+
+
+		for (uint i = 0; i < sensors.Count(); i++)
+		{
+			if (sensors[i].type == circle_bouncer && sensors[i].light == true)
+				App->renderer->Blit(sensors[i].texture, sensors[i].x, sensors[i].y);
 		}
 	}
 
@@ -722,7 +736,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(sensors[i].sound); 
 				sensors[i].collision = true;
 
-				sensors[i].light = !sensors[i].light;
+				if (sensors[i].type == circle_bouncer)
+				{
+					sensors[i].light = true;
+					sensors[i].timer = SDL_GetTicks();
+				}
+
+				else
+					sensors[i].light = !sensors[i].light;
 
 				if (sensors[i].light)
 				{
@@ -736,12 +757,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 						App->player->score += 10;
 						break;
 
+					case circle_bouncer:
+						App->player->score += 25;
+						break;
+
 					default:
 						break;
 					}
 				}
-				if (sensors[i].type == circle_bouncer)
-					App->player->score += 25;
 			}
 		}
 	}
@@ -766,7 +789,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 }
 
 //function for create sensors for score
-Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
+Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type, float restitution, bool sensor)
 {
 	this->x = x;
 	this->y = y;
@@ -781,21 +804,24 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 		radius = 6;
 		texture = scene->texture_circle_yellow_sensor;
 		sound = scene->sound_circle_yellow_sensor;
+		body = scene->App->physics->CreateCircle(x + radius, y + radius, radius, b2_staticBody, restitution, false, sensor);
 		break;
 
 	case circle_blue:
 		radius = 7;
 		texture = scene->texture_circle_blue_sensor;
 		sound = scene->sound_circle_blue_sensor;
+		body = scene->App->physics->CreateCircle(x + radius, y + radius, radius, b2_staticBody, restitution, false, sensor);
 		break;
 
 	case circle_bouncer:
-		int radius = 15;
-		texture = scene->texture_circle_bouncer_sensor;
+		radius = 15;
+		//texture = scene->texture_circle_bouncer_sensor;
+		texture = scene->texture_circle_blue_sensor;
 		sound = scene->sound_circle_bouncer_sensor;
+		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, restitution, false, sensor);
 		break;
 	}
 
-	body = scene->App->physics->CreateCircle(x + radius, y + radius, radius, b2_staticBody, 0.0f, false, true);
 	body->listener = scene;
 }

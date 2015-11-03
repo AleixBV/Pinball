@@ -22,7 +22,7 @@ struct Sensor
 	Sensor() : body(NULL), texture(NULL), sound(0), light(false), collision(false)
 	{}
 
-	Sensor(ModuleSceneIntro* physics, int x, int y, SensorType type);
+	Sensor(ModuleSceneIntro* physics, int x, int y, SensorType type, float restitution = 0.0f, bool sensor = true);
 
 	PhysBody* body;
 	int x;
@@ -32,6 +32,7 @@ struct Sensor
 	uint sound;
 	bool light;
 	bool collision;
+	Uint32 timer;
 };
 
 class ModuleSceneIntro : public Module
