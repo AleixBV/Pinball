@@ -94,6 +94,13 @@ public:
 	PhysBody* block2;
 	bool createBlock1, createBlock2;
 
+	PhysBody* bonus;
+	PhysBody* bonus_body;
+	Uint32 bonus_count;
+	bool bonus_first;
+	uint bonus_sound;
+	uint bonus_sound_shot;
+
 	Uint32 startCollision;
 
 private:

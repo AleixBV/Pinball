@@ -11,13 +11,12 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	background = frontground = NULL;
-	pusher1 = pusher2 = NULL;
+	pusher1 = pusher2 = bonus = bonus_body = NULL;
 	ray_on = false;
 	sensed = false;
 	show_back = false;
 	collisioned = false;
-	died = false;
-	loser = false;
+	died = loser = restart = bonus_first = false;
 	ball_left1 = ball_left2 = ball_left3 = NULL;
 	block1_tex = block2_tex = NULL;
 }
@@ -38,11 +37,15 @@ bool ModuleSceneIntro::Start()
 	block1_tex = App->textures->Load("pinball/blocker1.png");
 	block2_tex = App->textures->Load("pinball/blocker2.png");
 
+	App->audio->PlayMusic("pinball/PINBALL.MID");
+
 	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
 	App->audio->PlayFx(start_game_sound);
 
 	die_sound = App->audio->LoadFx("pinball/SOUND27.wav");
 	loser_sound = App->audio->LoadFx("pinball/SOUND3.wav");
+	bonus_sound = App->audio->LoadFx("pinball/SOUND27.wav");
+	bonus_sound_shot = App->audio->LoadFx("pinball/SOUND34.wav");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -342,6 +345,16 @@ bool ModuleSceneIntro::Start()
 	sensors.PushBack(Sensor(this, 393, 499, SensorType::circle_blue));
 	sensors.PushBack(Sensor(this, 415, 512, SensorType::circle_blue));
 
+
+	int bonus_points[8] = {
+		590, 384,
+		602, 375,
+		581, 365,
+		576, 377
+	};
+	bonus = App->physics->CreateChain(0, 0, bonus_points, 8, b2_staticBody, true);
+	bonus->listener = this;
+
 	//sensor for lose the game
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 	sensor->listener = this;
@@ -386,6 +399,38 @@ update_status ModuleSceneIntro::PreUpdate()
 	}
 
 	collisioned = false;
+
+	if (bonus_body != NULL)
+	{
+		if (bonus_first == false)
+		{
+			bonus_count = SDL_GetTicks();
+
+			b2Vec2 speed(-10, 6);
+			bonus_body->body->SetLinearVelocity(speed);
+			bonus_body->body->SetAngularVelocity(0.0f);
+			bonus_body->SetPosition(505, 140);
+
+			App->audio->PlayFx(bonus_sound);
+			App->audio->PlayFx(bonus_sound_shot);
+
+			bonus_first = true;
+		}
+
+		else if (bonus_first && (SDL_GetTicks() - bonus_count) > 1100)
+		{
+			bonus_body = App->player->secondary_balls.add(App->physics->CreateCircle(505, 140, 10, b2_dynamicBody, 0.0f, true))->data;
+			b2Vec2 speed(-10, 6);
+			bonus_body->body->SetLinearVelocity(speed);
+			bonus_body->body->SetAngularVelocity(0.0f);
+			bonus_body->SetPosition(505, 140);
+
+			App->audio->PlayFx(bonus_sound_shot);
+
+			bonus_body = NULL;
+			bonus_first = false;
+		}
+	}
 
 	if (died)
 	{
@@ -701,6 +746,23 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			}
 		}
 	}
+
+	if (bodyA == bonus && bonus_body == NULL)
+	{
+		if (bodyB == App->player->ball)
+			bonus_body = bodyB;
+		
+		else if (App->player->secondary_balls.count() != 0)
+		{
+			for (p2List_item<PhysBody*>* tmp = App->player->secondary_balls.getFirst(); tmp != NULL; tmp = tmp->next)
+			{
+				if (bodyB == tmp->data)
+					bonus_body = tmp->data;
+			}
+		}
+		App->player->score += 100;
+	}
+
 	collisioned = true;
 }
 
