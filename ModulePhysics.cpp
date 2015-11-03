@@ -335,8 +335,6 @@ update_status ModulePhysics::PostUpdate()
 bool ModulePhysics::CleanUp()
 {
 	LOG("Destroying physics world");
-	if (mouse_joint != NULL)
-	DeleteJoint(mouse_joint);
 
 	if (ground != NULL)
 	world->DestroyBody(ground);
