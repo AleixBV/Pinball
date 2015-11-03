@@ -612,7 +612,7 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 	this->x = x;
 	this->y = y;
 	this->type = type;
-	light = true;//for debug
+	light = false;
 	collision = false;
 	int radius = 0;
 
