@@ -482,21 +482,23 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
 		App->renderer->Blit(frontground, 0, 0);
 
-		switch (App->player->life)
+		if (loser == false && restart == false)
 		{
-		case 3:
-			App->renderer->Blit(ball_left3, 1035, 264);
-			break;
-		case 2:
-			App->renderer->Blit(ball_left2, 1035, 264);
-			break;
-		case 1:
-			App->renderer->Blit(ball_left1, 1035, 264);
-			break;
-		default:
-			break;
+			switch (App->player->life)
+			{
+			case 3:
+				App->renderer->Blit(ball_left3, 1035, 264);
+				break;
+			case 2:
+				App->renderer->Blit(ball_left2, 1035, 264);
+				break;
+			case 1:
+				App->renderer->Blit(ball_left1, 1035, 264);
+				break;
+			default:
+				break;
+			}
 		}
-
 	}
 
 
