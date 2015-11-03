@@ -379,7 +379,6 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(ball_left1);
 	App->textures->Unload(ball_left2);
 	App->textures->Unload(ball_left3);
-	App->textures->Unload(ball_left3);
 	App->textures->Unload(block1_tex);
 	App->textures->Unload(block2_tex);
 
