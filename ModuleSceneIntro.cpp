@@ -593,12 +593,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 						App->player->score += 10;
 						break;
 
-					case circle_bouncer:
-						App->player->score += 25;
+					default:
 						break;
-
 					}
 				}
+				if (sensors[i].type == circle_bouncer)
+					App->player->score += 25;
 			}
 		}
 	}
