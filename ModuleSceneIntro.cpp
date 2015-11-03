@@ -291,10 +291,10 @@ bool ModuleSceneIntro::Start()
 	texture_circle_yellow_sensor = App->textures->Load("pinball/light_yellow.png");
 	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND8.wav");
 
-	texture_circle_blue_sensor = App->textures->Load("");
+	texture_circle_blue_sensor = App->textures->Load("pinball/light_blue.png");
 	sound_circle_blue_sensor = App->audio->LoadFx("pinball/SOUND16");
 
-	texture_circle_bouncer_sensor = App->textures->Load("");
+	texture_circle_bouncer_sensor = App->textures->Load("pinball/light_blue.png");
 	sound_circle_bouncer_sensor = App->audio->LoadFx("pinball/SOUND12.wav");
 
 	sensors.PushBack(Sensor(this, 418, 101, SensorType::circle_yellow));
@@ -308,6 +308,29 @@ bool ModuleSceneIntro::Start()
 	sensors.PushBack(Sensor(this, 315, 189, SensorType::circle_yellow));
 	sensors.PushBack(Sensor(this, 315, 205, SensorType::circle_yellow));
 	sensors.PushBack(Sensor(this, 317, 218, SensorType::circle_yellow));
+
+
+	sensors.PushBack(Sensor(this, 444, 384, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 469, 388, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 489, 399, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 505, 414, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 515, 434, SensorType::circle_blue));
+
+	sensors.PushBack(Sensor(this, 518, 457, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 509, 480, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 495, 501, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 471, 514, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 444, 519, SensorType::circle_blue));
+
+	sensors.PushBack(Sensor(this, 419, 387, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 399, 396, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 383, 413, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 373, 432, SensorType::circle_blue));
+
+	sensors.PushBack(Sensor(this, 371, 456, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 378, 479, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 393, 499, SensorType::circle_blue));
+	sensors.PushBack(Sensor(this, 415, 512, SensorType::circle_blue));
 
 	//sensor for lose the game
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
@@ -588,7 +611,7 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 	this->x = x;
 	this->y = y;
 	this->type = type;
-	light = false;
+	light = true;//for debug
 	collision = false;
 	int radius = 0;
 
@@ -601,7 +624,7 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type)
 		break;
 
 	case circle_blue:
-		radius = 6;
+		radius = 7;
 		texture = scene->texture_circle_blue_sensor;
 		sound = scene->sound_circle_blue_sensor;
 		break;
