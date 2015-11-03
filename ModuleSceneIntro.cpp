@@ -51,11 +51,11 @@ bool ModuleSceneIntro::Start()
 
 	//--------------------------------
 	int pinball_1[52] = {
-		575, 121,
-		559, 109,
-		537, 96,
+		572, 123,
+		558, 110,
+		536, 97,
 		511, 88,
-		513, 92,
+		515, 90,
 		536, 99,
 		558, 112,
 		584, 138,
@@ -73,10 +73,10 @@ bool ModuleSceneIntro::Start()
 		614, 436,
 		605, 337,
 		618, 250,
-		614, 198,
-		610, 168,
-		599, 148,
-		588, 135
+		613, 198,
+		606, 170,
+		596, 150,
+		586, 136
 	};
 
 	int pinball_2[60] = {
@@ -314,6 +314,34 @@ bool ModuleSceneIntro::Start()
 	sensors.PushBack(Sensor(this, 315, 205, SensorType::circle_yellow));
 	sensors.PushBack(Sensor(this, 317, 218, SensorType::circle_yellow));
 
+	sensors.PushBack(Sensor(this, 360, 159, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 379, 155, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 394, 148, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 411, 140, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 517, 161, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 524, 175, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 528, 187, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 518, 140, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 545, 303, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 538, 325, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 538, 350, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 546, 372, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 329, 377, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 328, 394, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 325, 410, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 237, 477, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 266, 528, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 303, 475, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 584, 475, SensorType::circle_yellow));
+	sensors.PushBack(Sensor(this, 618,475, SensorType::circle_yellow));
+
+	sensors.PushBack(Sensor(this, 445, 653, SensorType::circle_yellow));
 
 	sensors.PushBack(Sensor(this, 444, 384, SensorType::circle_blue));
 	sensors.PushBack(Sensor(this, 469, 388, SensorType::circle_blue));

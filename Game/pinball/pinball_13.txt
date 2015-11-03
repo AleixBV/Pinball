@@ -1,5 +1,5 @@
 // Pivot 0, 0
-int frontground[22] = {
+int pinball[22] = {
 	420, 230,
 	465, 243,
 	471, 241,
@@ -14,7 +14,7 @@ int frontground[22] = {
 };
 
 // Pivot 0.000000, 0.000000
-float frontground[22] = {
+float pinball[22] = {
 	0.328125f, 0.319444f,
 	0.363281f, 0.337500f,
 	0.367969f, 0.334722f,
