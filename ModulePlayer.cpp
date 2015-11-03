@@ -95,6 +95,15 @@ bool ModulePlayer::Start()
 bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
+
+	App->textures->Unload(flipL_tex);
+	App->textures->Unload(flipR_tex);
+	App->textures->Unload(ball_tex);
+	App->textures->Unload(quicker_tex);
+	App->textures->Unload(ball_left1);
+	App->textures->Unload(ball_left2);
+	App->textures->Unload(ball_left3);
+
 	return true;
 }
 

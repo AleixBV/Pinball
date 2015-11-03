@@ -351,6 +351,9 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
+	App->textures->Unload(frontground);
+	App->textures->Unload(background);
+
 	return true;
 }
 
