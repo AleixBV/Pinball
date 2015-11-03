@@ -561,17 +561,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyA == sensor && bodyB != sensor)
 	{
-		if (App->player->life > 0)
+		if (App->player->life > 0 && bodyB == App->player->ball)
 		{
 			App->player->life--;
-
-			if (bodyB == App->player->ball)
-			{
-				died = true;
-			}
-			else if (bodyB != sensor)
-				body_to_destroy.PushBack(bodyB);
+			died = true;
 		}
+		else if (bodyB != sensor)
+			body_to_destroy.PushBack(bodyB);
 
 		if (App->player->life <= 0)
 		{
