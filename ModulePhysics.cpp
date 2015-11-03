@@ -281,7 +281,7 @@ update_status ModulePhysics::PostUpdate()
 	// so we can pull it around
 	// TODO 2: If a body was selected, create a mouse joint
 	// using mouse_joint class property
-	if (body_clicked != NULL && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	if (body_clicked != NULL && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
 		mouse_position.x = PIXEL_TO_METERS(App->input->GetMouseX());
 		mouse_position.y = PIXEL_TO_METERS(App->input->GetMouseY());
@@ -313,7 +313,7 @@ update_status ModulePhysics::PostUpdate()
 	{
 		body_clicked = NULL;
 		
-		//TODO delete(mouse_joint);
+		world->DestroyJoint(mouse_joint);
 	}
 
 	return UPDATE_CONTINUE;
