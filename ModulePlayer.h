@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "p2Point.h"
 #include "p2SString.h"
+#include "p2List.h"
 
 class PhysBody;
 class b2RevoluteJoint;
@@ -32,6 +33,7 @@ public:
 	PhysBody* f_l;
 	PhysBody* f_r;
 	PhysBody* ball;
+	p2List<PhysBody*> secondary_balls;
 	PhysBody* quicker_box;
 
 	b2RevoluteJoint* flip_l;

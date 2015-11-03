@@ -414,7 +414,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody);
+		App->player->secondary_balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 10, b2_dynamicBody, 0.0f, true));
 
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 		show_back = !show_back;
@@ -438,6 +438,12 @@ update_status ModuleSceneIntro::Update()
 		int quicker_x, quicker_y;
 		App->player->quicker_box->GetPosition(quicker_x, quicker_y);
 
+		for (p2List_item<PhysBody*>* tmp = App->player->secondary_balls.getFirst(); tmp != NULL; tmp = tmp->next)
+		{
+			int secondary_ball_x, secondary_ball_y;
+			tmp->data->GetPosition(secondary_ball_x, secondary_ball_y);
+			App->renderer->Blit(App->player->ball_tex, secondary_ball_x, secondary_ball_y, NULL, 1.0f);
+		}
 		App->renderer->Blit(App->player->ball_tex, ball_x, ball_y, NULL, 1.0f);
 		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
 		App->renderer->Blit(frontground, 0, 0);
@@ -563,11 +569,25 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (App->player->life > 0 && bodyB == App->player->ball)
 		{
-			App->player->life--;
-			died = true;
+			if (App->player->secondary_balls.count() != 0)
+			{
+				body_to_destroy.PushBack(bodyB);
+
+				App->player->ball = App->player->secondary_balls.getLast()->data;
+				App->player->secondary_balls.del(App->player->secondary_balls.getLast());
+			}
+
+			else
+			{
+				App->player->life--;
+				died = true;
+			}
 		}
-		else if (bodyB != sensor)
+		else
+		{
 			body_to_destroy.PushBack(bodyB);
+			App->player->secondary_balls.del(App->player->secondary_balls.findNode(bodyB));
+		}
 
 		if (App->player->life <= 0)
 		{
