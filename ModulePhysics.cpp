@@ -175,6 +175,8 @@ PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, b2Bo
 
 	b->CreateFixture(&fixture);
 
+	delete p;
+
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->SetUserData(pbody);
