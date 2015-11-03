@@ -360,6 +360,10 @@ update_status ModuleSceneIntro::PreUpdate()
 			if (sensors[i].light == true)
 				sensors[i].light = false;
 		}
+
+		block1->DeleteBody(block1);
+		block2->DeleteBody(block2);
+
 		loser = false;
 	}
 
@@ -473,10 +477,10 @@ update_status ModuleSceneIntro::Update()
 			242, 590
 		};
 		
-			App->physics->CreateChain(0, 0, block_1, 8, b2_staticBody);
-			createBlock1 = false;
+		block1 = App->physics->CreateChain(0, 0, block_1, 8, b2_staticBody);
+		createBlock1 = false;
 	}
-	if (createBlock2 == true)
+	if (createBlock2 == true && (SDL_GetTicks() - startCollision) >= 500)
 	{
 		int block_2[8] = {
 			623, 623,
@@ -484,7 +488,8 @@ update_status ModuleSceneIntro::Update()
 			655, 591,
 			655, 596
 		};
-		App->physics->CreateChain(0, 0, block_2, 8, b2_staticBody);
+		block2 = App->physics->CreateChain(0, 0, block_2, 8, b2_staticBody);
+		createBlock2 = false;
 	}
 
 	return UPDATE_CONTINUE;
@@ -517,6 +522,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyA == pusher2 || bodyB == pusher2)
 	{
 		App->player->ball->Push(0.0f, -200.0f);
+		startCollision = SDL_GetTicks();
 		createBlock2 = true;
 	}
 
