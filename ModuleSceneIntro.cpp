@@ -11,6 +11,7 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	background = frontground = NULL;
+	pusher1 = pusher2 = NULL;
 	ray_on = false;
 	sensed = false;
 	show_back = false;
@@ -312,6 +313,12 @@ bool ModuleSceneIntro::Start()
 	sensor = App->physics->CreateRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50, b2_staticBody, 0.0f, true);
 	sensor->listener = this;
 
+	//Pushers in each side of the pinball
+	pusher1 = App->physics->CreateRectangle(215, 640, 40, 20, b2_staticBody, true);
+	pusher1->listener = this;
+	pusher2 = App->physics->CreateRectangle(642, 640, 40, 20, b2_staticBody, true);
+	pusher2->listener = this;
+
 	return ret;
 }
 
@@ -457,6 +464,29 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
 		App->player->quicker->EnableMotor(false);
 
+	if (createBlock1 == true && (SDL_GetTicks() - startCollision) >= 500)
+	{
+		int block_1[8] = {
+			209, 568,
+			209, 563,
+			242, 587,
+			242, 590
+		};
+		
+			App->physics->CreateChain(0, 0, block_1, 8, b2_staticBody);
+			createBlock1 = false;
+	}
+	if (createBlock2 == true)
+	{
+		int block_2[8] = {
+			623, 623,
+			623, 618,
+			655, 591,
+			655, 596
+		};
+		App->physics->CreateChain(0, 0, block_2, 8, b2_staticBody);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -478,7 +508,17 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}*/
-	
+	if (bodyA == pusher1 || bodyB == pusher1) 
+	{
+		App->player->ball->Push(0.0f, -200.0f);
+		startCollision = SDL_GetTicks();
+		createBlock1 = true;
+	}
+	if (bodyA == pusher2 || bodyB == pusher2)
+	{
+		App->player->ball->Push(0.0f, -200.0f);
+		createBlock2 = true;
+	}
 
 	if (sensor->body == bodyA->body && bodyB == App->player->ball)
 	{

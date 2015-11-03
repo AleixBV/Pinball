@@ -53,7 +53,7 @@ public:
 
 	SDL_Texture* background;
 	SDL_Texture* frontground;
-	SDL_Texture* circle;
+	SDL_Texture* pusher;
 
 	SDL_Texture* texture_circle_yellow_sensor;
 	SDL_Texture* texture_circle_blue_sensor;
@@ -73,6 +73,14 @@ public:
 
 	bool died;
 	bool loser;
+
+	PhysBody* pusher1;
+	PhysBody* pusher2;
+	PhysBody* block1;
+	PhysBody* block2;
+	bool createBlock1, createBlock2;
+
+	unsigned int startCollision;
 
 private:
 	bool show_back;

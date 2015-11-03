@@ -100,6 +100,13 @@ update_status ModulePlayer::Update()
 	title.create("Lifes: %i. Score:%i. Last score:%i.", life, score, last_score);
 	App->window->SetTitle(title.GetString());
 
+	//Debug
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+		ball->SetPosition(220, 500);
+
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		ball->Push(0, -100);
+
 	//sounds
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
 	{
@@ -110,10 +117,7 @@ update_status ModulePlayer::Update()
 	{
 		App->audio->PlayFx(quicker_sound);
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
-		ball->Push(0, -100);
-
+	
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
 		flip_l->EnableMotor(true);
 

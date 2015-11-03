@@ -149,7 +149,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2Body
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, b2BodyType bodyType, float density)
+PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, b2BodyType bodyType, float density, bool sensor)
 {
 	b2BodyDef body;
 	body.type = bodyType;
@@ -171,6 +171,7 @@ PhysBody* ModulePhysics::CreatePolygon(int x, int y, int* points, int size, b2Bo
 	b2FixtureDef fixture;
 	fixture.shape = &polygon;
 	fixture.density = density;
+	fixture.isSensor = sensor;
 
 	b->CreateFixture(&fixture);
 
