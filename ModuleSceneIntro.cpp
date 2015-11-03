@@ -205,8 +205,8 @@ bool ModuleSceneIntro::Start()
 	};
 
 	int pinball_13[22] = {
-		420, 244,
-		465, 256,
+		420, 234,
+		465, 246,
 		471, 241,
 		472, 224,
 		464, 230,
@@ -215,7 +215,7 @@ bool ModuleSceneIntro::Start()
 		436, 227,
 		432, 221,
 		431, 214,
-		420, 240
+		420, 230
 	};
 
 	int pinball_14[16] = {
