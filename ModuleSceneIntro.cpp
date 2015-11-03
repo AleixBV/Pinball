@@ -14,7 +14,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	pusher1 = pusher2 = bonus = bonus_body = NULL;
 	ray_on = false;
 	sensed = false;
-	show_back = false;
+	show_back = true;
 	collisioned = false;
 	died = loser = restart = bonus_first = false;
 	ball_left1 = ball_left2 = ball_left3 = NULL;
