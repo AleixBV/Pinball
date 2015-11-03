@@ -18,6 +18,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	collisioned = false;
 	died = false;
 	loser = false;
+	ball_left1 = ball_left2 = ball_left3 = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -30,6 +31,9 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 	frontground = App->textures->Load("pinball/frontground.png");
 	background = App->textures->Load("pinball/windows_pinball.png");
+	ball_left1 = App->textures->Load("pinball/1balls_left.png");
+	ball_left2 = App->textures->Load("pinball/2balls_left.png");
+	ball_left3 = App->textures->Load("pinball/3balls_left.png");
 
 	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
 	App->audio->PlayFx(start_game_sound);
@@ -353,6 +357,9 @@ bool ModuleSceneIntro::CleanUp()
 
 	App->textures->Unload(frontground);
 	App->textures->Unload(background);
+	App->textures->Unload(ball_left1);
+	App->textures->Unload(ball_left2);
+	App->textures->Unload(ball_left3);
 
 	return true;
 }
@@ -450,6 +457,21 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(App->player->ball_tex, ball_x, ball_y, NULL, 1.0f);
 		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
 		App->renderer->Blit(frontground, 0, 0);
+
+		switch (App->player->life)
+		{
+		case 3:
+			App->renderer->Blit(ball_left3, 1035, 264);
+			break;
+		case 2:
+			App->renderer->Blit(ball_left2, 1035, 264);
+			break;
+		case 1:
+			App->renderer->Blit(ball_left1, 1035, 264);
+			break;
+		default:
+			break;
+		}
 
 	}
 

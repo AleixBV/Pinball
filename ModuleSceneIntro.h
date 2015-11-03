@@ -59,6 +59,10 @@ public:
 	SDL_Texture* texture_circle_blue_sensor;
 	SDL_Texture* texture_circle_bouncer_sensor;
 
+	SDL_Texture* ball_left1;
+	SDL_Texture* ball_left2;
+	SDL_Texture* ball_left3;
+
 	uint sound_circle_yellow_sensor;
 	uint sound_circle_blue_sensor;
 	uint sound_circle_bouncer_sensor;

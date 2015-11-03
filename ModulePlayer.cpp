@@ -17,7 +17,6 @@ ModulePlayer::~ModulePlayer()
 	flip_l = flip_r = NULL;
 	quicker = NULL;
 	flipL_tex = flipR_tex = ball_tex = quicker_tex = NULL;
-	ball_left1 = ball_left2 = ball_left3 = NULL;
 }
 
 // Load assets
@@ -30,9 +29,6 @@ bool ModulePlayer::Start()
 	flipR_tex = App->textures->Load("pinball/flip_dr.png");
 	ball_tex = App->textures->Load("pinball/ball.png");
 	quicker_tex = App->textures->Load("pinball/quicker.png");
-	ball_left1 = App->textures->Load("pinball/1balls_left.png");
-	ball_left2 = App->textures->Load("pinball/2balls_left.png"); 
-	ball_left3 = App->textures->Load("pinball/3balls_left.png"); 
 
 	flippers_sound = App->audio->LoadFx("pinball/SOUND5.wav");
 	quicker_sound = App->audio->LoadFx("pinball/SOUND14.wav");
@@ -100,9 +96,6 @@ bool ModulePlayer::CleanUp()
 	App->textures->Unload(flipR_tex);
 	App->textures->Unload(ball_tex);
 	App->textures->Unload(quicker_tex);
-	App->textures->Unload(ball_left1);
-	App->textures->Unload(ball_left2);
-	App->textures->Unload(ball_left3);
 
 	return true;
 }
@@ -148,21 +141,6 @@ update_status ModulePlayer::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_UP)
 		quicker->EnableMotor(true);
-
-	switch (life)
-	{
-	case 3: 
-		App->renderer->Blit(ball_left3, 1035, 264);
-		break;
-	case 2:
-		App->renderer->Blit(ball_left2, 1035, 264);
-		break;
-	case 1:
-		App->renderer->Blit(ball_left1, 1035, 264);
-		break;
-	default:
-		break;
-	}
 
 	return UPDATE_CONTINUE;
 }
