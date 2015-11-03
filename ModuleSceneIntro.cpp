@@ -19,6 +19,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	died = false;
 	loser = false;
 	ball_left1 = ball_left2 = ball_left3 = NULL;
+	block1_tex = block2_tex = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -34,6 +35,8 @@ bool ModuleSceneIntro::Start()
 	ball_left1 = App->textures->Load("pinball/1balls_left.png");
 	ball_left2 = App->textures->Load("pinball/2balls_left.png");
 	ball_left3 = App->textures->Load("pinball/3balls_left.png");
+	block1_tex = App->textures->Load("pinball/blocker1.png");
+	block2_tex = App->textures->Load("pinball/blocker2.png");
 
 	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
 	App->audio->PlayFx(start_game_sound);
@@ -360,6 +363,9 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(ball_left1);
 	App->textures->Unload(ball_left2);
 	App->textures->Unload(ball_left3);
+	App->textures->Unload(ball_left3);
+	App->textures->Unload(block1_tex);
+	App->textures->Unload(block2_tex);
 
 	return true;
 }
@@ -473,6 +479,14 @@ update_status ModuleSceneIntro::Update()
 			break;
 		}
 
+		if (block1 != NULL)
+		{
+			App->renderer->Blit(block1_tex, 209, 563);
+		}
+		if (block2 != NULL)
+		{
+			App->renderer->Blit(block2_tex, 623, 597);
+		}
 	}
 
 
