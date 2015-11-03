@@ -97,6 +97,15 @@ bool ModulePlayer::CleanUp()
 	App->textures->Unload(ball_tex);
 	App->textures->Unload(quicker_tex);
 
+	f_l->DeleteBody(f_l);
+	f_r->DeleteBody(f_r);
+	ball->DeleteBody(ball);
+	quicker_box->DeleteBody(quicker_box);
+
+	if (secondary_balls.count() != 0)
+		secondary_balls.clear();
+
+
 	return true;
 }
 

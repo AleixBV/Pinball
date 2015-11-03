@@ -406,6 +406,10 @@ bool ModuleSceneIntro::CleanUp()
 	App->textures->Unload(ball_left3);
 	App->textures->Unload(block1_tex);
 	App->textures->Unload(block2_tex);
+	App->textures->Unload(texture_circle_blue_sensor);
+	App->textures->Unload(texture_circle_bouncer_sensor);
+	App->textures->Unload(texture_circle_yellow_sensor);
+	App->textures->Unload(pusher);
 
 	return true;
 }
