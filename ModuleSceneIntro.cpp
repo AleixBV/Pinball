@@ -84,20 +84,20 @@ bool ModuleSceneIntro::Start()
 		641, 181,
 		613, 124,
 		573, 91,
-		530, 66,
+		528, 69,
 		480, 58,
 		418, 58,
 		373, 67,
-		352, 50,
-		313, 51,
-		284, 65,
-		278, 90,
-		299, 116,
+		346, 54,
+		306, 58,
+		286, 75,
+		282, 103,
+		300, 125,
 		271, 159,
 		262, 193,
 		267, 250,
 		275, 298,
-		311, 324,
+		314, 360,
 		310, 421,
 		246, 439,
 		219, 466,
@@ -205,8 +205,8 @@ bool ModuleSceneIntro::Start()
 	};
 
 	int pinball_13[22] = {
-		420, 230,
-		465, 243,
+		420, 244,
+		465, 256,
 		471, 241,
 		472, 224,
 		464, 230,
@@ -215,7 +215,7 @@ bool ModuleSceneIntro::Start()
 		436, 227,
 		432, 221,
 		431, 214,
-		420, 224
+		420, 240
 	};
 
 	int pinball_14[16] = {
@@ -244,11 +244,6 @@ bool ModuleSceneIntro::Start()
 	App->physics->CreateChain(0, 0, pinball_12, 8, b2_staticBody, 1.0f, 0.25f);
 	App->physics->CreateChain(0, 0, pinball_13, 22, b2_staticBody, 1.0f, 0.25f);
 	App->physics->CreateChain(0, 0, pinball_14, 16, b2_staticBody, 1.0f, 0.25f);
-
-	sensors.PushBack(Sensor(this, 331, 97, SensorType::circle_bouncer, 1.5f, false));
-	sensors.PushBack(Sensor(this, 421, 180, SensorType::circle_bouncer, 1.5f, false));
-	sensors.PushBack(Sensor(this, 453, 225, SensorType::circle_bouncer, 1.5f, false));
-	sensors.PushBack(Sensor(this, 486, 170, SensorType::circle_bouncer, 1.5f, false));
 
 	//bounds
 	int bound_1[8] = {
@@ -343,6 +338,11 @@ bool ModuleSceneIntro::Start()
 	sensors.PushBack(Sensor(this, 415, 512, SensorType::circle_blue));
 
 
+	sensors.PushBack(Sensor(this, 324, 96, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 423, 182, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 454, 226, SensorType::circle_bouncer, 1.5f, false));
+	sensors.PushBack(Sensor(this, 487, 170, SensorType::circle_bouncer, 1.5f, false));
+
 	int bonus_points[8] = {
 		590, 384,
 		602, 375,
@@ -398,7 +398,7 @@ update_status ModuleSceneIntro::PreUpdate()
 	{
 		if (sensors[i].type == circle_bouncer && sensors[i].light == true)
 		{
-			if ((SDL_GetTicks() - sensors[i].timer) > 2000)
+			if ((SDL_GetTicks() - sensors[i].timer) > 150)
 				sensors[i].light = false;
 		}
 	}
@@ -572,7 +572,7 @@ update_status ModuleSceneIntro::Update()
 		for (uint i = 0; i < sensors.Count(); i++)
 		{
 			if (sensors[i].type == circle_bouncer && sensors[i].light == true)
-				App->renderer->Blit(sensors[i].texture, sensors[i].x, sensors[i].y);
+				App->renderer->Blit(sensors[i].texture, sensors[i].x - 10, sensors[i].y - 20);
 		}
 	}
 
@@ -816,8 +816,7 @@ Sensor::Sensor(ModuleSceneIntro* scene, int x, int y, SensorType type, float res
 
 	case circle_bouncer:
 		radius = 15;
-		//texture = scene->texture_circle_bouncer_sensor;
-		texture = scene->texture_circle_blue_sensor;
+		texture = scene->texture_circle_bouncer_sensor;
 		sound = scene->sound_circle_bouncer_sensor;
 		body = scene->App->physics->CreateCircle(x, y, radius, b2_staticBody, restitution, false, sensor);
 		break;
