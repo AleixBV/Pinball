@@ -41,6 +41,9 @@ bool ModuleSceneIntro::Start()
 	start_game_sound = App->audio->LoadFx("pinball/SOUND1.wav");
 	App->audio->PlayFx(start_game_sound);
 
+	die_sound = App->audio->LoadFx("pinball/SOUND27.wav");
+	loser_sound = App->audio->LoadFx("pinball/SOUND3.wav");
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	//--------------------------------
@@ -296,7 +299,7 @@ bool ModuleSceneIntro::Start()
 
 	//sensors for score
 	texture_circle_yellow_sensor = App->textures->Load("pinball/light_yellow.png");
-	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND8.wav");
+	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND26.wav");
 
 	texture_circle_blue_sensor = App->textures->Load("pinball/light_blue.png");
 	sound_circle_blue_sensor = App->audio->LoadFx("pinball/SOUND16.wav");
@@ -386,11 +389,48 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	if (died)
 	{
+		if (loser == false)
+		{
+			b2Vec2 speed(0, 0);
+			App->player->ball->body->SetLinearVelocity(speed);
+			App->player->ball->body->SetAngularVelocity(0.0f);
+			App->player->ball->SetPosition(680, 600);
+		}
+
+		App->audio->PlayFx(die_sound);
+		die_count = SDL_GetTicks();
+
+		died = false;
+	}
+
+	if (loser && (SDL_GetTicks() - die_count) > 1250)
+	{
+		for (uint i = 0; i < sensors.Count(); i++)
+		{
+			if (sensors[i].light == true)
+				sensors[i].light = false;
+		}
+
+		block1->DeleteBody(block1);
+		block1 = NULL;
+		block2->DeleteBody(block2);
+		block2 = NULL;
+
+		App->audio->PlayFx(loser_sound);
+		loser_count = SDL_GetTicks();
+
+		loser = false;
+		restart = true;
+	}
+
+	if (restart && (SDL_GetTicks() - loser_count) > 2400)
+	{
 		b2Vec2 speed(0, 0);
 		App->player->ball->body->SetLinearVelocity(speed);
 		App->player->ball->body->SetAngularVelocity(0.0f);
 		App->player->ball->SetPosition(680, 600);
-		died = false;
+
+		restart = false;
 	}
 
 	if (body_to_destroy.Count() != 0)
@@ -400,20 +440,6 @@ update_status ModuleSceneIntro::PreUpdate()
 			App->physics->DeleteBody(body_to_destroy[i]);
 		}
 		body_to_destroy.Clear();
-	}
-
-	if (loser)
-	{
-		for (uint i = 0; i < sensors.Count(); i++)
-		{
-			if (sensors[i].light == true)
-				sensors[i].light = false;
-		}
-
-		block1->DeleteBody(block1);
-		block2->DeleteBody(block2);
-
-		loser = false;
 	}
 
 	return UPDATE_CONTINUE;
@@ -464,19 +490,22 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(App->player->quicker_tex, quicker_x + 676, quicker_y + 647);
 		App->renderer->Blit(frontground, 0, 0);
 
-		switch (App->player->life)
+		if (loser == false && restart == false)
 		{
-		case 3:
-			App->renderer->Blit(ball_left3, 1035, 264);
-			break;
-		case 2:
-			App->renderer->Blit(ball_left2, 1035, 264);
-			break;
-		case 1:
-			App->renderer->Blit(ball_left1, 1035, 264);
-			break;
-		default:
-			break;
+			switch (App->player->life)
+			{
+			case 3:
+				App->renderer->Blit(ball_left3, 1035, 264);
+				break;
+			case 2:
+				App->renderer->Blit(ball_left2, 1035, 264);
+				break;
+			case 1:
+				App->renderer->Blit(ball_left1, 1035, 264);
+				break;
+			default:
+				break;
+			}
 		}
 
 		if (block1 != NULL)

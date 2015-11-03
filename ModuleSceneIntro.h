@@ -71,6 +71,11 @@ public:
 	uint sound_circle_bouncer_sensor;
 
 	uint start_game_sound;
+	uint die_sound;
+	uint loser_sound;
+
+	Uint32 die_count;
+	Uint32 loser_count;
 
 	p2Point<int> ray;
 	bool ray_on;
@@ -81,6 +86,7 @@ public:
 
 	bool died;
 	bool loser;
+	bool restart;
 
 	PhysBody* pusher1;
 	PhysBody* pusher2;
@@ -88,7 +94,7 @@ public:
 	PhysBody* block2;
 	bool createBlock1, createBlock2;
 
-	unsigned int startCollision;
+	Uint32 startCollision;
 
 private:
 	bool show_back;
