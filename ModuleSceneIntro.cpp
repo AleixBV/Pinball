@@ -44,7 +44,7 @@ bool ModuleSceneIntro::Start()
 
 	die_sound = App->audio->LoadFx("pinball/SOUND27.wav");
 	loser_sound = App->audio->LoadFx("pinball/SOUND3.wav");
-	bonus_sound = App->audio->LoadFx("pinball/SOUND27.wav");
+	bonus_sound = App->audio->LoadFx("pinball/SOUND25.wav");
 	bonus_sound_shot = App->audio->LoadFx("pinball/SOUND34.wav");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
@@ -454,7 +454,7 @@ update_status ModuleSceneIntro::PreUpdate()
 			bonus_first = true;
 		}
 
-		else if (bonus_first && (SDL_GetTicks() - bonus_count) > 1100)
+		else if (bonus_first && (SDL_GetTicks() - bonus_count) > 2100)
 		{
 			bonus_body = App->player->secondary_balls.add(App->physics->CreateCircle(505, 140, 10, b2_dynamicBody, 0.0f, true))->data;
 			b2Vec2 speed(-10, 6);
