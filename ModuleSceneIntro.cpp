@@ -296,7 +296,7 @@ bool ModuleSceneIntro::Start()
 
 	//sensors for score
 	texture_circle_yellow_sensor = App->textures->Load("pinball/light_yellow.png");
-	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND8.wav");
+	sound_circle_yellow_sensor = App->audio->LoadFx("pinball/SOUND26.wav");
 
 	texture_circle_blue_sensor = App->textures->Load("pinball/light_blue.png");
 	sound_circle_blue_sensor = App->audio->LoadFx("pinball/SOUND16.wav");
